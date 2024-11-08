@@ -2,16 +2,15 @@ package store.custom.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import store.custom.model.product.Product;
 
 public class OrderSheet {
-    private final List<Product> orderSheet;
+    private final List<OrderedProduct> orderSheet;
 
-    public OrderSheet(List<Product> orderSheet) {
+    public OrderSheet(List<OrderedProduct> orderSheet) {
         this.orderSheet = new ArrayList<>(orderSheet);
     }
 
-    public List<Product> getOrderSheet() {
+    public List<OrderedProduct> getOrderSheet() {
         return orderSheet;
     }
 
@@ -19,7 +18,7 @@ public class OrderSheet {
         return orderSheet.size();
     }
 
-    public Product getOrderSheetByIndex(int index) {
+    public OrderedProduct getOrderSheetByIndex(int index) {
         if (index < 0 || index >= orderSheet.size()) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);
         }

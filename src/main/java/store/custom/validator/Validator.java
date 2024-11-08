@@ -5,6 +5,7 @@ import static store.custom.validator.CustomErrorMessages.INVALID_INPUT;
 
 import java.util.List;
 import store.custom.model.OrderSheet;
+import store.custom.model.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
@@ -42,14 +43,14 @@ public class Validator {
     }
 
     public static void validateOrderedProductsName(Products products, OrderSheet orderSheet) {
-        for (Product orderedProduct : orderSheet.getOrderSheet()) {
+        for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
             if (!isProductNameMatched(products, orderedProduct)) { // 제품이 없으면
                 throw new IllegalArgumentException(CustomErrorMessages.NON_EXISTENT_PRODUCT);
             }
         }
     }
 
-    private static boolean isProductNameMatched(Products products, Product orderedProduct) {
+    private static boolean isProductNameMatched(Products products, OrderedProduct orderedProduct) {
         for (Product product : products.getProducts()) {
             if (product.getName().equals(orderedProduct.getName())) {
                 return true; // 제품이 존재할 때 true 반환
@@ -59,14 +60,14 @@ public class Validator {
     }
 
     public static void validateOrderedProductsQuantity(Products products, OrderSheet orderSheet) {
-        for (Product orderedProduct : orderSheet.getOrderSheet()) {
+        for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
             if (orderedProduct.getQuantity() > calculateProductTotalQuantity(products, orderedProduct)) {
                 throw new IllegalArgumentException(CustomErrorMessages.INSUFFICIENT_STOCK);
             }
         }
     }
 
-    private static int calculateProductTotalQuantity(Products products, Product orderedProduct) {
+    private static int calculateProductTotalQuantity(Products products, OrderedProduct orderedProduct) {
         int totalQuantity = 0;
 
         for (Product product : products.getProducts()) {

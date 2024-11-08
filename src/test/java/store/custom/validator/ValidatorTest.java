@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.custom.model.OrderSheet;
+import store.custom.model.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
@@ -35,7 +36,7 @@ public class ValidatorTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INVALID_INPUT);
     }
-    
+
     @DisplayName("유효성검사_주문형식1_테스트")
     @Test
     void 유효성검사_주문형식1_테스트() {
@@ -95,8 +96,8 @@ public class ValidatorTest {
         ));
 
         OrderSheet orderSheet = new OrderSheet(List.of(
-                new Product("콜라", 0, 9, null),
-                new Product("맥주", 0, 10, null)
+                new OrderedProduct("콜라", 9, 0, null, 0, 0),
+                new OrderedProduct("맥주", 10, 0, null, 0, 0)
         ));
 
         assertThatThrownBy(() -> Validator.validateOrderedProductsName(originalCatalog, orderSheet))
@@ -115,8 +116,8 @@ public class ValidatorTest {
         ));
 
         OrderSheet orderSheet = new OrderSheet(List.of(
-                new Product("콜라", 0, 21, null),
-                new Product("물", 0, 5, null)
+                new OrderedProduct("콜라", 21, 0, null, 0, 0),
+                new OrderedProduct("물", 5, 0, null, 0, 0)
         ));
 
         assertThatThrownBy(() -> Validator.validateOrderedProductsQuantity(originalCatalog, orderSheet))

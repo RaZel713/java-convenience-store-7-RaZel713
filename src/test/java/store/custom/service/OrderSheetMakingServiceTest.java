@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.custom.model.OrderSheet;
+import store.custom.model.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 import store.custom.validator.CustomErrorMessages;
@@ -69,11 +70,11 @@ public class OrderSheetMakingServiceTest {
         assertNotNull(orderSheet);
         assertEquals(2, orderSheet.getOrderSheet().size());
 
-        Product product1 = orderSheet.getOrderSheet().get(0);
+        OrderedProduct product1 = orderSheet.getOrderSheet().get(0);
         assertEquals("콜라", product1.getName());
         assertEquals(10, product1.getQuantity());
 
-        Product product2 = orderSheet.getOrderSheet().get(1);
+        OrderedProduct product2 = orderSheet.getOrderSheet().get(1);
         assertEquals("물", product2.getName());
         assertEquals(5, product2.getQuantity());
     }

@@ -6,7 +6,6 @@ import static store.custom.constants.RegexConstants.SINGLE_COMMA;
 import java.util.ArrayList;
 import java.util.List;
 import store.custom.Utils.StringUtils;
-import store.custom.model.product.Product;
 import store.custom.validator.Validator;
 
 public class OrderSheetMaker {
@@ -29,10 +28,10 @@ public class OrderSheetMaker {
     }
 
     private static OrderSheet createOrderSheet(List<String> orderForms) {
-        List<Product> orderedProducts = new ArrayList<>();
+        List<OrderedProduct> orderedProducts = new ArrayList<>();
         for (String orderForm : orderForms) {
-            Product product = createOrderedProduct(parseOrderForm(orderForm));
-            orderedProducts.add(product);
+            OrderedProduct orderedProduct = createOrderedProduct(parseOrderForm(orderForm));
+            orderedProducts.add(orderedProduct);
         }
         return new OrderSheet(orderedProducts);
     }
@@ -42,7 +41,7 @@ public class OrderSheetMaker {
         return StringUtils.splitStringByDelimiter(orderForm, HYPHEN);
     }
 
-    private static Product createOrderedProduct(List<String> parts) {
-        return new Product(parts.get(0).trim(), 0, Integer.parseInt(parts.get(1).trim()), null);
+    private static OrderedProduct createOrderedProduct(List<String> parts) {
+        return new OrderedProduct(parts.get(0).trim(), Integer.parseInt(parts.get(1).trim()), 0, null, 0, 0);
     }
 }
