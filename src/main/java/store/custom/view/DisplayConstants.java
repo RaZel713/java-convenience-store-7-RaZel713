@@ -10,4 +10,6 @@ public class DisplayConstants {
     public static final String HYPHEN_SPACE = "- ";
 
     public static final String ZERO_STOCK_MESSAGE = "재고 없음";
+
+    public static final String PRODUCT_INPUT_PROMPT = "구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])";
 }
