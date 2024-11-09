@@ -8,6 +8,9 @@ import static store.custom.view.DisplayConstants.PRODUCT_LIST_MESSAGE;
 import static store.custom.view.DisplayConstants.SPACE;
 import static store.custom.view.DisplayConstants.ZERO_STOCK_MESSAGE;
 
+import java.util.List;
+import store.custom.model.OrderSheet;
+import store.custom.model.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
@@ -56,5 +59,36 @@ public class OutputView {
             displayFormat += (SPACE + product.getPromotion());
         }
         return displayFormat;
+    }
+
+    public void displayReceipt(OrderSheet orderSheet, List<Integer> num, int membershipDiscount) {
+        displayPurchaseHistory(orderSheet);
+        displayFreebie(orderSheet);
+
+        // 구매 결과
+        System.out.println(Receipt.TOTAL.format(num.get(0), num.get(1)));
+        System.out.println(Receipt.EVENT_DISCOUNT.format(num.get(2)));
+        System.out.println(Receipt.MEMBERSHIP_DISCOUNT.format(membershipDiscount));
+        System.out.println(Receipt.FINAL_AMOUNT.format(num.get(1) - num.get(2) - membershipDiscount));
+    }
+
+    private void displayPurchaseHistory(OrderSheet orderSheet) {
+        System.out.println(Receipt.TITLE.getFormat());
+        System.out.println(Receipt.ITEM_HEADER.getFormat());
+
+        for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
+            System.out.println(Receipt.ITEM_NAME.format(orderedProduct.getName(),
+                    orderedProduct.getQuantity(), orderedProduct.getTotalPrice()));
+        }
+    }
+
+    private void displayFreebie(OrderSheet orderSheet) {
+        System.out.println(Receipt.FREE_ITEM.getFormat());
+        for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
+            if (orderedProduct.getGet() != 0) {
+                System.out.println(Receipt.FREE_ITEM_NAME.format(orderedProduct.getName(), orderedProduct.getGet()));
+            }
+        }
+        System.out.println(Receipt.DIVIDING_LINE.getFormat());
     }
 }

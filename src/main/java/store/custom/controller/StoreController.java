@@ -16,6 +16,7 @@ import store.custom.service.ProductCatalogEditor;
 import store.custom.service.ProductParser;
 import store.custom.service.PromotionDiscountService;
 import store.custom.service.PromotionParser;
+import store.custom.service.ReceiptDetailsCalculationService;
 import store.custom.service.ResponseParsingService;
 import store.custom.view.InputView;
 import store.custom.view.OutputView;
@@ -63,7 +64,9 @@ public class StoreController {
         String membershipResponse = inputView.inputMembershipDiscount();
 
         membershipResponse = responseParsingService.run(membershipResponse);
-        int totalPrice = memberShipDiscountService.run(membershipResponse, orderSheet);
+        int membershipDiscount = memberShipDiscountService.run(membershipResponse, orderSheet);
+
+        outputView.displayReceipt(orderSheet, ReceiptDetailsCalculationService.run(orderSheet), membershipDiscount);
     }
 
     public void handlePromotionResults(OrderSheet orderSheet, List<List<Integer>> orderSheetPromotionResults) {
