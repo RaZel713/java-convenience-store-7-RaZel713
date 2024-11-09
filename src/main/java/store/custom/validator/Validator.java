@@ -78,4 +78,10 @@ public class Validator {
 
         return totalQuantity;
     }
+
+    public static void validateYesOrNoInput(String response) {
+        if (!response.equals("Y") && !response.equals("N")) {
+            throw new IllegalArgumentException(INVALID_INPUT);
+        }
+    }
 }

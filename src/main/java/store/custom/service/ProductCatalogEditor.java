@@ -2,6 +2,8 @@ package store.custom.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import store.custom.model.OrderSheet;
+import store.custom.model.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
@@ -56,5 +58,60 @@ public class ProductCatalogEditor {
             Product lastProduct = originalCatalog.getProductByIndex(originalCatalog.getProductsSize() - 1);
             addProductConsideringPromotion(lastProduct, result);
         }
+    }
+    
+    public static void adjustInventoryForOrders(OrderSheet orderSheet, Products productCatalog) {
+        for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
+            processOrderedProduct(orderedProduct, productCatalog);
+        }
+    }
+
+    private static void processOrderedProduct(OrderedProduct orderedProduct, Products productCatalog) {
+        int remainQuantity = orderedProduct.getQuantity();
+        for (Product product : productCatalog.getProducts()) {
+            if (remainQuantity == 0) {
+                break;
+            }
+            if (isSameProduct(orderedProduct, product)) {
+                remainQuantity = updateProductQuantity(product, remainQuantity);
+            }
+        }
+    }
+
+    private static boolean isSameProduct(OrderedProduct orderedProduct, Product product) {
+        return product.getName().equals(orderedProduct.getName());
+    }
+
+    private static int updateProductQuantity(Product product, int remainQuantity) {
+        if (hasPromotion(product)) { // 프로모션있을때
+            return calculateRemainingQuantityWithPromotion(product, remainQuantity);
+        }
+        return calculateRemainingQuantityWithoutPromotion(product, remainQuantity);
+    }
+
+    private static boolean hasPromotion(Product product) {
+        return product.getPromotion() != null;
+    }
+
+    private static int calculateRemainingQuantityWithPromotion(Product product, int remainQuantity) {
+        int productQuantity = product.getQuantity();
+
+        if (remainQuantity >= productQuantity) {
+            product.setQuantity(0);
+            return remainQuantity - productQuantity;
+        }
+        product.setQuantity(productQuantity - remainQuantity);
+        return 0;
+    }
+
+    private static int calculateRemainingQuantityWithoutPromotion(Product product, int remainQuantity) {
+        int productQuantity = product.getQuantity();
+
+        if (remainQuantity == productQuantity) {
+            product.setQuantity(0);
+            return 0;
+        }
+        product.setQuantity(productQuantity - remainQuantity);
+        return 0;
     }
 }

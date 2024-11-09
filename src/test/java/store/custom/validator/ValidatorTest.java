@@ -124,4 +124,12 @@ public class ValidatorTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INSUFFICIENT_STOCK);
     }
+
+    @DisplayName("유효성검사_응답입력_테스트")
+    @Test
+    void 유효성검사_응답입력_테스트() {
+        assertThatThrownBy(() -> Validator.validateYesOrNoInput("YY"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(CustomErrorMessages.INVALID_INPUT);
+    }
 }
