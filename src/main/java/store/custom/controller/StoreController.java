@@ -9,6 +9,7 @@ import store.custom.model.OrderedProduct;
 import store.custom.model.product.Products;
 import store.custom.model.promotion.Promotions;
 import store.custom.service.FileReader;
+import store.custom.service.MemberShipDiscountService;
 import store.custom.service.OrderSheetEditService;
 import store.custom.service.OrderSheetMakingService;
 import store.custom.service.ProductCatalogEditor;
@@ -26,6 +27,7 @@ public class StoreController {
     private final PromotionDiscountService promotionDiscountService;
     private final ResponseParsingService responseParsingService;
     private final OrderSheetEditService orderSheetEditService;
+    private final MemberShipDiscountService memberShipDiscountService;
 
     public StoreController(OutputView outputView, InputView inputView) {
         this.outputView = outputView;
@@ -34,6 +36,7 @@ public class StoreController {
         this.promotionDiscountService = new PromotionDiscountService();
         this.responseParsingService = new ResponseParsingService();
         this.orderSheetEditService = new OrderSheetEditService();
+        this.memberShipDiscountService = new MemberShipDiscountService();
     }
 
     public void start() {
@@ -56,6 +59,11 @@ public class StoreController {
 
         handlePromotionResults(orderSheet, orderSheetPromotionResults);
         ProductCatalogEditor.adjustInventoryForOrders(orderSheet, productCatalog);
+
+        String membershipResponse = inputView.inputMembershipDiscount();
+
+        membershipResponse = responseParsingService.run(membershipResponse);
+        int totalPrice = memberShipDiscountService.run(membershipResponse, orderSheet);
     }
 
     public void handlePromotionResults(OrderSheet orderSheet, List<List<Integer>> orderSheetPromotionResults) {
@@ -71,7 +79,7 @@ public class StoreController {
 
             String response = handleNoPromotion(noPromotionProductCount, name);
             if (response != null) {
-                responseParsingService.run(response);
+                response = responseParsingService.run(response);
                 orderSheetEditService.applyNonDiscountedPurchaseDecision
                         (response, orderSheetPromotionResult, orderSheet.getOrderSheetByIndex(currentIndex));
             }
@@ -80,7 +88,7 @@ public class StoreController {
 
             response = handleFreeProductAddition(promotionAdditionalCount, name, orderSheet, currentIndex);
             if (response != null) {
-                responseParsingService.run(response);
+                response = responseParsingService.run(response);
                 orderSheetEditService.applyAdditionalPromotionDecision
                         (response, orderSheetPromotionResult, orderSheet.getOrderSheetByIndex(currentIndex));
             }
