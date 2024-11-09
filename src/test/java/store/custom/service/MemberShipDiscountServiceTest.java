@@ -16,14 +16,14 @@ public class MemberShipDiscountServiceTest {
     void 멤버십할인서비스_멤버십할인적용_최대할인_테스트() {
         OrderSheet orderSheet = new OrderSheet(List.of(
                 new OrderedProduct("콜라", 10, 7000, "탄산2+1", 7, 3),
-                new OrderedProduct("물", 5, 5000, null, 0, 0),
-                new OrderedProduct("에너지바", 5, 10000, null, 0, 0),
+                new OrderedProduct("물", 4, 4000, null, 0, 0),
+                new OrderedProduct("에너지바", 10, 20000, null, 0, 0),
                 new OrderedProduct("비타민워터", 6, 9000, null, 0, 0)
         ));
 
-        int totalPrice = memberShipDiscountService.run("Y", orderSheet); // 31,000-8,000
+        int membershipDiscount = memberShipDiscountService.run("Y", orderSheet); // 33,000 의 30% = 9,900
 
-        assertEquals(23000, totalPrice);
+        assertEquals(8000, membershipDiscount);
     }
 
     @DisplayName("멤버십할인서비스_멤버십할인적용_테스트")
@@ -31,12 +31,12 @@ public class MemberShipDiscountServiceTest {
     void 멤버십할인서비스_멤버십할인적용_테스트() {
         OrderSheet orderSheet = new OrderSheet(List.of(
                 new OrderedProduct("콜라", 10, 7000, "탄산2+1", 7, 3),
-                new OrderedProduct("물", 5, 5000, null, 0, 0)
+                new OrderedProduct("물", 6, 6000, null, 0, 0)
         ));
 
-        int totalPrice = memberShipDiscountService.run("Y", orderSheet); // 12,000-3,600
+        int membershipDiscount = memberShipDiscountService.run("Y", orderSheet); // 6,000 의 30%
 
-        assertEquals(8400, totalPrice);
+        assertEquals(1800, membershipDiscount);
     }
 
     @DisplayName("멤버십할인서비스_멤버십할인미적용_테스트")
@@ -47,8 +47,8 @@ public class MemberShipDiscountServiceTest {
                 new OrderedProduct("물", 5, 5000, null, 0, 0)
         ));
 
-        int totalPrice = memberShipDiscountService.run("N", orderSheet); // 12,000
+        int membershipDiscount = memberShipDiscountService.run("N", orderSheet);
 
-        assertEquals(12000, totalPrice);
+        assertEquals(0, membershipDiscount);
     }
 }

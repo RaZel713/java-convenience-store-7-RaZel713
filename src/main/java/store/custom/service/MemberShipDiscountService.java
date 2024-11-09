@@ -5,27 +5,29 @@ import store.custom.model.OrderedProduct;
 
 public class MemberShipDiscountService {
     public int run(String response, OrderSheet orderSheet) {
-        int totalPrice = calculateTotalPrice(orderSheet);
+        int nonPromotionProductPrice = calculateNonPromotionProductPrice(orderSheet);
 
         if (response.equals("Y")) {
-            return totalPrice - calculateDiscountPrice(totalPrice);
+            return calculateMembershipDiscount(nonPromotionProductPrice);
         }
 
-        return totalPrice;
+        return 0;
     }
 
-    private int calculateTotalPrice(OrderSheet orderSheet) {
-        int totalPrice = 0;
+    private int calculateNonPromotionProductPrice(OrderSheet orderSheet) {
+        int nonPromotionProductPrice = 0;
 
         for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
-            totalPrice += orderedProduct.getTotalPrice();
+            if (orderedProduct.getPromotion() == null) {
+                nonPromotionProductPrice += orderedProduct.getTotalPrice();
+            }
         }
 
-        return totalPrice;
+        return nonPromotionProductPrice;
     }
 
-    private int calculateDiscountPrice(int totalPrice) {
-        int discountPrice = totalPrice / 100 * 30; // 30프로
+    private int calculateMembershipDiscount(int nonPromotionProductPrice) {
+        int discountPrice = nonPromotionProductPrice / 100 * 30; // 30프로
         if (discountPrice < 8000) {
             return discountPrice;
         }
