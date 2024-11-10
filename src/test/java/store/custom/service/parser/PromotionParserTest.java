@@ -11,9 +11,9 @@ import store.custom.model.promotion.Promotions;
 
 public class PromotionParserTest {
 
-    @DisplayName("프로모션 파일 관리 EMPTY 테스트")
+    @DisplayName("프로모션변환기_EMPTY_테스트")
     @Test
-    void 프로모션_파일_관리_EMPTY_테스트() {
+    void 프로모션변환기_EMPTY_테스트() {
         List<String> lines = List.of();
         Promotions promotions = PromotionParser.run(lines);
 
@@ -21,18 +21,18 @@ public class PromotionParserTest {
         assertEquals(0, promotions.getPromotions().size());
     }
 
-    @DisplayName("프로모션 파일 관리 NULL 테스트")
+    @DisplayName("프로모션변환기_NULL_테스트")
     @Test
-    void 프로모션_파일_관리_NULL_테스트() {
+    void 프로모션변환기_NULL_테스트() {
         Promotions promotions = PromotionParser.run(null);
 
         assertNotNull(promotions);
         assertEquals(0, promotions.getPromotions().size());
     }
 
-    @DisplayName("프로모션 파일 관리 정상 테스트")
+    @DisplayName("프로모션변환기_정상_테스트")
     @Test
-    void 프로모션_파일_관리_정상_테스트() {
+    void 프로모션변환기_정상_테스트() {
         List<String> lines = List.of(
                 "name,buy,get,start_date,end_date",
                 "탄산2+1,2,1,2024-12-01,2024-12-31",
@@ -59,9 +59,9 @@ public class PromotionParserTest {
         assertEquals("2024-11-30", secondPromotion.getEndDate());
     }
 
-    @DisplayName("프로모션 파일 관리 공백 처리 테스트")
+    @DisplayName("프로모션변환기_공백처리_테스트")
     @Test
-    void 프로모션_파일_관리_공백_처리_테스트() {
+    void 프로모션변환기_공백처리_테스트() {
         List<String> lines = List.of(
                 "Name,Buy,Get,StartDate,EndDate",
                 "  탄산2+1  , 2 , 1 , 2024-12-01 , 2024-12-31 "

@@ -28,41 +28,41 @@ public class OrderParserTest {
         ));
     }
 
-    @DisplayName("주문서제작_빈문자열일때_테스트")
+    @DisplayName("주문서변환기_빈문자열일때_테스트")
     @Test
-    void 주문서제작_빈문자열일때_테스트() {
+    void 주문서변환기_빈문자열일때_테스트() {
         assertThatThrownBy(() -> orderParser.run("", originalCatalog))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INVALID_INPUT);
     }
 
-    @DisplayName("주문서제작_잘못된형식일때_테스트")
+    @DisplayName("주문서변환기_잘못된형식일때_테스트")
     @Test
-    void 주문서제작_잘못된형식일때_테스트() {
+    void 주문서변환기_잘못된형식일때_테스트() {
         assertThatThrownBy(() -> orderParser.run("[콜라-10],물-3", originalCatalog))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INVALID_ORDER_FORMAT);
     }
 
-    @DisplayName("주문서제작_존재하지않는제품일때_테스트")
+    @DisplayName("주문서변환기_존재하지않는제품일때_테스트")
     @Test
-    void 주문서제작_존재하지않는제품일때_테스트() {
+    void 주문서변환기_존재하지않는제품일때_테스트() {
         assertThatThrownBy(() -> orderParser.run("[콜라-10],[맥주-3]", originalCatalog))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.NON_EXISTENT_PRODUCT);
     }
 
-    @DisplayName("주문서제작_재고의수량을초과했을때_테스트")
+    @DisplayName("주문서변환기_재고의수량을초과했을때_테스트")
     @Test
-    void 주문서제작_재고의수량을초과했을때_테스트() {
+    void 주문서변환기_재고의수량을초과했을때_테스트() {
         assertThatThrownBy(() -> orderParser.run("[콜라-21],[물-1]", originalCatalog))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INSUFFICIENT_STOCK);
     }
 
-    @DisplayName("주문서제작_정상_테스트")
+    @DisplayName("주문서변환기_정상_테스트")
     @Test
-    void 주문서제작_정상_테스트() {
+    void 주문서변환기_정상_테스트() {
         String orderRequest = "[콜라-10],[물-5]";
 
         OrderSheet orderSheet = orderParser.run(orderRequest, originalCatalog);

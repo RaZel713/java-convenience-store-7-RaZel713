@@ -76,13 +76,11 @@ public class Validator {
 
     private static int calculateProductTotalQuantity(Products products, OrderedProduct orderedProduct) {
         int totalQuantity = 0;
-
         for (Product product : products.getProducts()) {
             if (product.getName().equals(orderedProduct.getName())) {
                 totalQuantity += product.getQuantity();
             }
         }
-
         return totalQuantity;
     }
 

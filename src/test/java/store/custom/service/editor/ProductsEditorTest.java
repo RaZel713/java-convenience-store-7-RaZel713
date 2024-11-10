@@ -13,9 +13,9 @@ import store.custom.model.product.Products;
 
 public class ProductsEditorTest {
 
-    @DisplayName("제품목록관리_동일한이름과가격의제품이있을때_테스트")
+    @DisplayName("재고에디터_동일한이름과가격의제품이있을때_테스트")
     @Test
-    void 제품목록관리_동일한이름과가격의제품이있을때_테스트() {
+    void 재고에디터_동일한이름과가격의제품이있을때_테스트() {
         Products originalCatalog = new Products(List.of(
                 new Product("콜라", 1000, 10, "탄산2+1"),
                 new Product("콜라", 1000, 10, null)
@@ -31,8 +31,8 @@ public class ProductsEditorTest {
     }
 
     @Test
-    @DisplayName("제품목록관리_프로모션제품만있는제품이존재할때_테스트")
-    void 제품목록관리_프로모션제품만있을때_테스트() {
+    @DisplayName("재고에디터_프로모션제품만있는제품이존재할때_테스트")
+    void 재고에디터_프로모션제품만있을때_테스트() {
         Products originalCatalog = new Products(List.of(
                 new Product("오렌지주스", 1800, 9, "MD추천상품"),
                 new Product("물", 500, 10, null)
@@ -49,8 +49,8 @@ public class ProductsEditorTest {
     }
 
     @Test
-    @DisplayName("제품목록관리_카탈로그마지막제품이프로모션제품만있는제품일때_테스트")
-    void 제품목록관리_카탈로그마지막제품이프로모션제품만있는제품일때_테스트() {
+    @DisplayName("재고에디터_카탈로그마지막제품이프로모션제품만있는제품일때_테스트")
+    void 재고에디터_카탈로그마지막제품이프로모션제품만있는제품일때_테스트() {
         Products originalCatalog = new Products(List.of(
                 new Product("물", 500, 10, null),
                 new Product("오렌지주스", 1800, 9, "MD추천상품")
@@ -66,8 +66,8 @@ public class ProductsEditorTest {
     }
 
     @Test
-    @DisplayName("제품목록관리_프로모션없는제품만존재할때_테스트")
-    void 제품목록관리_프로모션없는제품만존재할때_테스트() {
+    @DisplayName("재고에디터_프로모션없는제품만존재할때_테스트")
+    void 재고에디터_프로모션없는제품만존재할때_테스트() {
         Products originalCatalog = new Products(List.of(
                 new Product("물", 500, 10, null),
                 new Product("에너지바", 2000, 5, null)
@@ -81,8 +81,8 @@ public class ProductsEditorTest {
     }
 
     @Test
-    @DisplayName("제품목록관리_재고반영_테스트")
-    void 제품목록관리_재고반영_테스트() {
+    @DisplayName("재고에디터_재고반영_테스트")
+    void 재고에디터_재고반영_테스트() {
         Products originalCatalog = new Products(List.of(
                 new Product("콜라", 1000, 10, "탄산2+1"),
                 new Product("콜라", 1000, 10, null),

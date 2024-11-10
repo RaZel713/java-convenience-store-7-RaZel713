@@ -65,18 +65,19 @@ public class StoreController {
         return PromotionParser.run(promotionLines);
     }
 
+    // 주문 처리 메서드
     private String handleStoreOrder(Products productCatalog, Promotions promotionCatalog) {
         outputView.displayInventoryStatus(productCatalog); // 재고 내역 출력
 
         OrderSheet orderSheet = handleOrderSheet(productCatalog, promotionCatalog);
+        ProductsEditor.adjustInventoryForOrders(orderSheet, productCatalog); // 주문서에 맞춰 재고 관리
         ReceiptDetails receiptDetails = receiptDetailsMaker.run(orderSheet, inputResponseForMembership());
 
         outputView.displayReceipt(orderSheet, receiptDetails); // 레시피 출력
-
         return inputResponseForAdditionalPurchase();
     }
 
-    // 주문서 처리 메서드
+    // 주문서 제작 메서드
     private OrderSheet handleOrderSheet(Products productCatalog, Promotions promotionCatalog) {
         OrderSheet orderSheet = inputOrderRequest(productCatalog);
         orderSheetEditor.addPromotionInfo(productCatalog, promotionCatalog, orderSheet);
@@ -84,7 +85,6 @@ public class StoreController {
         List<List<Integer>> orderSheetPromotionResults =
                 promotionResultsMaker.createPromotionResults(productCatalog, orderSheet); // 프로모션 결과지 만들기
         handlePromotionResults(orderSheet, orderSheetPromotionResults); // 프로모션 결과지를 주문서에 반영
-        ProductsEditor.adjustInventoryForOrders(orderSheet, productCatalog); // 주문서에 맞춰 재고 관리
 
         return orderSheet;
     }
