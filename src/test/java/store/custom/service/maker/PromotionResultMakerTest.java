@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import store.custom.model.PromotionResult.PromotionResults;
 import store.custom.model.order.OrderSheet;
 import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
@@ -33,9 +33,11 @@ public class PromotionResultMakerTest {
         OrderedProduct orderProduct = new OrderedProduct("콜라", 6, 1000, "탄산2+1", 2, 1);
         OrderSheet testOrderSheet = new OrderSheet(Collections.singletonList(orderProduct));
 
-        List<List<Integer>> results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
+        PromotionResults results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
 
-        assertEquals(Arrays.asList(2, 0, 0), results.getFirst());
+        assertEquals(2, results.getPromotionResultByIndex(0).getPromotionAppliedCount());
+        assertEquals(0, results.getPromotionResultByIndex(0).getExtraPromotionCount());
+        assertEquals(0, results.getPromotionResultByIndex(0).getNonPromotionProductCount());
     }
 
     @DisplayName("프로모션결과메이커_프로모션미적용상품이존재할때_테스트")
@@ -44,9 +46,11 @@ public class PromotionResultMakerTest {
         OrderedProduct orderProduct = new OrderedProduct("콜라", 4, 1000, "탄산2+1", 2, 1);
         OrderSheet testOrderSheet = new OrderSheet(Collections.singletonList(orderProduct));
 
-        List<List<Integer>> results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
+        PromotionResults results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
 
-        assertEquals(Arrays.asList(1, 0, 1), results.getFirst());
+        assertEquals(1, results.getPromotionResultByIndex(0).getPromotionAppliedCount());
+        assertEquals(0, results.getPromotionResultByIndex(0).getExtraPromotionCount());
+        assertEquals(1, results.getPromotionResultByIndex(0).getNonPromotionProductCount());
     }
 
     @DisplayName("프로모션결과메이커_프로모션상품이없을때_테스트")
@@ -55,8 +59,10 @@ public class PromotionResultMakerTest {
         OrderedProduct orderProduct = new OrderedProduct("물", 2, 500, null, 0, 0);
         OrderSheet testOrderSheet = new OrderSheet(Collections.singletonList(orderProduct));
 
-        List<List<Integer>> results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
+        PromotionResults results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
 
-        assertEquals(Arrays.asList(-1, -1, -1), results.getFirst());
+        assertEquals(-1, results.getPromotionResultByIndex(0).getPromotionAppliedCount());
+        assertEquals(-1, results.getPromotionResultByIndex(0).getExtraPromotionCount());
+        assertEquals(-1, results.getPromotionResultByIndex(0).getNonPromotionProductCount());
     }
 }

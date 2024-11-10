@@ -7,7 +7,7 @@ import static store.custom.constants.StringConstants.RESPONSE_YES;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
-import java.util.List;
+import store.custom.model.PromotionResult.PromotionResult;
 import store.custom.model.order.OrderSheet;
 import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
@@ -78,7 +78,7 @@ public class OrderSheetEditor {
 
     private void applyPromotionBuyAndGet(OrderedProduct orderProduct, Promotion promotion) {
         String orderProductPromotion = orderProduct.getPromotion();
-        
+
         if (orderProductPromotion != null && !orderProductPromotion.equals(BEFORE_PROMOTION_START)
                 && !orderProductPromotion.equals(AFTER_PROMOTION_END)) {
             orderProduct.setBuy(promotion.getBuy());
@@ -88,7 +88,7 @@ public class OrderSheetEditor {
 
     // 프로모션 결과
 
-    public void applyResponseForNoPromotion(String response, List<Integer> promotionResult,
+    public void applyResponseForNoPromotion(String response, PromotionResult promotionResult,
                                             OrderedProduct orderedProduct) {
         if (response.equals(RESPONSE_YES)) {
             processPurchaseWithNoDiscount(orderedProduct, promotionResult);
@@ -99,20 +99,22 @@ public class OrderSheetEditor {
         }
     }
 
-    private void processPurchaseWithNoDiscount(OrderedProduct orderedProduct, List<Integer> promotionResult) {
-        orderedProduct.setBuy(orderedProduct.getBuy() * promotionResult.get(0) + promotionResult.get(2));
-        orderedProduct.setGet(orderedProduct.getGet() * promotionResult.get(0));
+    private void processPurchaseWithNoDiscount(OrderedProduct orderedProduct, PromotionResult promotionResult) {
+        orderedProduct.setBuy(
+                orderedProduct.getBuy() * promotionResult.getPromotionAppliedCount()
+                        + promotionResult.getNonPromotionProductCount());
+        orderedProduct.setGet(orderedProduct.getGet() * promotionResult.getPromotionAppliedCount());
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getQuantity());
     }
 
-    private void processNonPurchaseWithNoDiscount(OrderedProduct orderedProduct, List<Integer> promotionResult) {
-        orderedProduct.setBuy(orderedProduct.getBuy() * promotionResult.get(0));
-        orderedProduct.setGet(orderedProduct.getGet() * promotionResult.get(0));
-        orderedProduct.setQuantity(orderedProduct.getQuantity() - promotionResult.get(2));
+    private void processNonPurchaseWithNoDiscount(OrderedProduct orderedProduct, PromotionResult promotionResult) {
+        orderedProduct.setBuy(orderedProduct.getBuy() * promotionResult.getPromotionAppliedCount());
+        orderedProduct.setGet(orderedProduct.getGet() * promotionResult.getPromotionAppliedCount());
+        orderedProduct.setQuantity(orderedProduct.getQuantity() - promotionResult.getNonPromotionProductCount());
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getQuantity());
     }
 
-    public void applyResponseForFreeProduct(String response, List<Integer> promotionResult,
+    public void applyResponseForFreeProduct(String response, PromotionResult promotionResult,
                                             OrderedProduct orderedProduct) {
         if (response.equals(RESPONSE_YES)) {
             processAdditionalPromotionApplied(orderedProduct, promotionResult);
@@ -122,16 +124,16 @@ public class OrderSheetEditor {
         }
     }
 
-    private void processAdditionalPromotionApplied(OrderedProduct orderedProduct, List<Integer> promotionResult) {
-        orderedProduct.setBuy(orderedProduct.getBuy() * (promotionResult.get(0) + 1));
+    private void processAdditionalPromotionApplied(OrderedProduct orderedProduct, PromotionResult promotionResult) {
+        orderedProduct.setBuy(orderedProduct.getBuy() * (promotionResult.getPromotionAppliedCount() + 1));
         orderedProduct.setQuantity(orderedProduct.getQuantity() + orderedProduct.getGet());
-        orderedProduct.setGet(orderedProduct.getGet() * (promotionResult.get(0) + 1));
+        orderedProduct.setGet(orderedProduct.getGet() * (promotionResult.getPromotionAppliedCount() + 1));
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getQuantity());
     }
 
-    private void processAdditionalPromotionNotApplied(OrderedProduct orderedProduct, List<Integer> promotionResult) {
-        orderedProduct.setBuy(orderedProduct.getBuy() * (promotionResult.get(0) + 1));
-        orderedProduct.setGet(orderedProduct.getGet() * promotionResult.get(0));
+    private void processAdditionalPromotionNotApplied(OrderedProduct orderedProduct, PromotionResult promotionResult) {
+        orderedProduct.setBuy(orderedProduct.getBuy() * (promotionResult.getPromotionAppliedCount() + 1));
+        orderedProduct.setGet(orderedProduct.getGet() * promotionResult.getPromotionAppliedCount());
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getQuantity());
     }
 
@@ -139,9 +141,9 @@ public class OrderSheetEditor {
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getQuantity()); // 총가격
     }
 
-    public void computeTotalWithPromotion(OrderedProduct orderedProduct, List<Integer> promotionResult) {
-        orderedProduct.setBuy(orderedProduct.getBuy() * promotionResult.get(0));
-        orderedProduct.setGet(orderedProduct.getGet() * promotionResult.get(0));
+    public void computeTotalWithPromotion(OrderedProduct orderedProduct, PromotionResult promotionResult) {
+        orderedProduct.setBuy(orderedProduct.getBuy() * promotionResult.getPromotionAppliedCount());
+        orderedProduct.setGet(orderedProduct.getGet() * promotionResult.getPromotionAppliedCount());
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getQuantity());
     }
 }

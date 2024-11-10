@@ -5,6 +5,8 @@ import static store.custom.constants.StringConstants.PROMOTIONS_FILE_PATH;
 import static store.custom.constants.StringConstants.RESPONSE_YES;
 
 import java.util.List;
+import store.custom.model.PromotionResult.PromotionResult;
+import store.custom.model.PromotionResult.PromotionResults;
 import store.custom.model.ReceiptDetails;
 import store.custom.model.order.OrderSheet;
 import store.custom.model.order.OrderedProduct;
@@ -81,18 +83,18 @@ public class StoreController {
         OrderSheet orderSheet = inputOrderRequest(productCatalog);
         orderSheetEditor.addPromotionInfo(productCatalog, promotionCatalog, orderSheet);
 
-        List<List<Integer>> orderSheetPromotionResults =
+        PromotionResults promotionResults =
                 promotionResultsMaker.createPromotionResults(productCatalog, orderSheet); // 프로모션 결과지 만들기
-        handlePromotionResults(orderSheet, orderSheetPromotionResults); // 프로모션 결과지를 주문서에 반영
+        handlePromotionResults(orderSheet, promotionResults); // 프로모션 결과지를 주문서에 반영
 
         return orderSheet;
     }
 
     // 프로모션 행사 적용 결과 처리 메서드
-    private void handlePromotionResults(OrderSheet orderSheet, List<List<Integer>> promotionResults) {
-        for (int currentIndex = 0; currentIndex < promotionResults.size(); currentIndex++) {
-            List<Integer> promotionResult = promotionResults.get(currentIndex);
-            OrderedProduct orderedProduct = orderSheet.getOrderSheetByIndex(currentIndex);
+    private void handlePromotionResults(OrderSheet orderSheet, PromotionResults promotionResults) {
+        for (int index = 0; index < promotionResults.getPromotionResultCount(); index++) {
+            PromotionResult promotionResult = promotionResults.getPromotionResultByIndex(index);
+            OrderedProduct orderedProduct = orderSheet.getOrderSheetByIndex(index);
 
             handleNonPromotionProduct(orderedProduct, promotionResult);
             handleExcludedPromotionProduct(orderedProduct, promotionResult);
@@ -101,36 +103,38 @@ public class StoreController {
         }
     }
 
-    private void handleNonPromotionProduct(OrderedProduct orderedProduct, List<Integer> promotionResult) {
-        if (promotionResult.equals(List.of(-1, -1, -1))) {
+    private void handleNonPromotionProduct(OrderedProduct orderedProduct, PromotionResult promotionResult) {
+        if (promotionResult.getNonPromotionProductCount() == -1) {
             orderSheetEditor.computeTotalWithoutPromotion(orderedProduct);
         }
     }
 
-    private void handleExcludedPromotionProduct(OrderedProduct orderedProduct, List<Integer> promotionResult) {
+    private void handleExcludedPromotionProduct(OrderedProduct orderedProduct, PromotionResult promotionResult) {
         String orderedProductName = orderedProduct.getName();
-        int nonPromotionalProduct = promotionResult.get(2);
+        int nonPromotionProduct = promotionResult.getNonPromotionProductCount();
 
-        if (nonPromotionalProduct > 0) {
-            String responseForNoPromotion = inputResponseForNoPromotion(orderedProductName, nonPromotionalProduct);
-            orderSheetEditor.applyResponseForNoPromotion
-                    (responseForNoPromotion, promotionResult, orderedProduct);
+        if (nonPromotionProduct > 0) {
+            String responseForNoPromotion = inputResponseForNoPromotion(orderedProductName, nonPromotionProduct);
+            orderSheetEditor.applyResponseForNoPromotion(responseForNoPromotion, promotionResult, orderedProduct);
         }
     }
 
-    private void handleAdditionalFreebie(OrderedProduct orderedProduct, List<Integer> promotionResult) {
+    private void handleAdditionalFreebie(OrderedProduct orderedProduct, PromotionResult promotionResult) {
         String orderedProductName = orderedProduct.getName();
+        int extraPromotionCount = promotionResult.getExtraPromotionCount();
 
-        if (promotionResult.get(1) > 0) {
+        if (extraPromotionCount > 0) {
             int additionalFreebie = orderedProduct.getGet();
             String responseForFreeProduct = inputResponseForFreebie(orderedProductName, additionalFreebie);
-            orderSheetEditor.applyResponseForFreeProduct
-                    (responseForFreeProduct, promotionResult, orderedProduct);
+            orderSheetEditor.applyResponseForFreeProduct(responseForFreeProduct, promotionResult, orderedProduct);
         }
     }
 
-    private void handlePromotionProduct(OrderedProduct orderedProduct, List<Integer> promotionResult) {
-        if (promotionResult.get(1) == 0 && promotionResult.get(2) == 0) {
+    private void handlePromotionProduct(OrderedProduct orderedProduct, PromotionResult promotionResult) {
+        int nonPromotionProduct = promotionResult.getNonPromotionProductCount();
+        int extraPromotionCount = promotionResult.getExtraPromotionCount();
+
+        if (extraPromotionCount == 0 && nonPromotionProduct == 0) {
             orderSheetEditor.computeTotalWithPromotion(orderedProduct, promotionResult);
         }
     }
