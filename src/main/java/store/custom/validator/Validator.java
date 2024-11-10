@@ -44,6 +44,11 @@ public class Validator {
         }
     }
 
+    public static void validateOrderSheet(Products products, OrderSheet orderSheet) {
+        validateOrderedProductsName(products, orderSheet);
+        validateOrderedProductsQuantity(products, orderSheet);
+    }
+
     public static void validateOrderedProductsName(Products products, OrderSheet orderSheet) {
         for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
             if (!isProductNameMatched(products, orderedProduct)) { // 제품이 없으면

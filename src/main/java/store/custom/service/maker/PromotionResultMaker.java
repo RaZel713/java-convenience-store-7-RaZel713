@@ -1,10 +1,8 @@
-package store.custom.service;
+package store.custom.service.maker;
 
 import static store.custom.constants.StringConstants.AFTER_PROMOTION_END;
 import static store.custom.constants.StringConstants.BEFORE_PROMOTION_START;
 
-import camp.nextstep.edu.missionutils.DateTimes;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,75 +11,9 @@ import store.custom.model.order.OrderSheet;
 import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
-import store.custom.model.promotion.Promotion;
-import store.custom.model.promotion.Promotions;
 
-public class PromotionDiscountService {
-    public void run(Products productCatalog, Promotions promotions, OrderSheet orderSheet) {
-        for (OrderedProduct orderProduct : orderSheet.getOrderSheet()) {
-            setProductPriceAndPromotion(orderProduct, productCatalog); // 가격과 프로모션 정보 옮기기
-            setPromotionDetails(orderProduct, promotions); // 프로모션 관련 정보 옮기기 (buy,get,기한별)
-        }
-    }
 
-    private void setProductPriceAndPromotion(OrderedProduct orderProduct, Products productCatalog) {
-        Product product = findOrderedProduct(orderProduct, productCatalog);
-        if (product != null) {
-            orderProduct.setTotalPrice(product.getPrice());
-            setPromotionIfExist(orderProduct, product);
-        }
-    }
-
-    private Product findOrderedProduct(OrderedProduct orderProduct, Products productCatalog) {
-        for (Product product : productCatalog.getProducts()) {
-            if (product.getName().equals(orderProduct.getName())) {
-                return product;
-            }
-        } // 이름이 같은 제품은 프로모션 있는 순 -> 프로모션 없는 순
-        return null;
-    }
-
-    private void setPromotionIfExist(OrderedProduct orderProduct, Product product) {
-        if (product.getPromotion() != null) {
-            orderProduct.setPromotion(product.getPromotion());
-        }
-    }
-
-    private void setPromotionDetails(OrderedProduct orderProduct, Promotions promotions) {
-        if (orderProduct.getPromotion() != null) {
-            LocalDate today = DateTimes.now().toLocalDate();
-            Promotion promotion = findPromotion(orderProduct.getPromotion(), promotions);
-            if (promotion != null) { // 프로모션이 있으면
-                applyPromotionBuyAndGet(orderProduct, promotion);
-                applyPromotionDates(orderProduct, today, promotion);
-            }
-        }
-    }
-
-    private Promotion findPromotion(String promotionName, Promotions promotions) {
-        for (Promotion promotion : promotions.getPromotions()) {
-            if (promotion.getName().equals(promotionName)) {
-                return promotion;
-            }
-        }
-        return null;
-    }
-
-    private void applyPromotionBuyAndGet(OrderedProduct orderProduct, Promotion promotion) {
-        orderProduct.setBuy(promotion.getBuy());
-        orderProduct.setGet(promotion.getGet());
-    }
-
-    private void applyPromotionDates(OrderedProduct orderProduct, LocalDate today, Promotion promotion) {
-        if (today.isBefore(LocalDate.parse(promotion.getStartDate()))) {
-            orderProduct.setPromotion(BEFORE_PROMOTION_START);
-        }
-
-        if (today.isAfter(LocalDate.parse(promotion.getEndDate()))) {
-            orderProduct.setPromotion(AFTER_PROMOTION_END);
-        }
-    }
-
+public class PromotionResultMaker {
     public List<List<Integer>> createPromotionResults(Products products, OrderSheet orderSheet) {
         List<List<Integer>> orderSheetPromotionResults = new ArrayList<>();
 

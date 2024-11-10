@@ -1,4 +1,4 @@
-package store.custom.service;
+package store.custom.service.parser;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,9 +14,9 @@ import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 import store.custom.validator.CustomErrorMessages;
 
-public class OrderSheetMakingServiceTest {
-    private Products originalCatalog;  // 클래스 필드로 선언
-    private final OrderSheetMakingService orderSheetMakingService = new OrderSheetMakingService();
+public class OrderParserTest {
+    private Products originalCatalog;
+    private final OrderParser orderParser = new OrderParser();
 
     @BeforeEach
     void setUp() {
@@ -28,44 +28,44 @@ public class OrderSheetMakingServiceTest {
         ));
     }
 
-    @DisplayName("주문서제작서비스_빈문자열일때_테스트")
+    @DisplayName("주문서제작_빈문자열일때_테스트")
     @Test
-    void 주문서제작서비스_빈문자열일때_테스트() {
-        assertThatThrownBy(() -> orderSheetMakingService.run("", originalCatalog))
+    void 주문서제작_빈문자열일때_테스트() {
+        assertThatThrownBy(() -> orderParser.run("", originalCatalog))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INVALID_INPUT);
     }
 
-    @DisplayName("주문서제작서비스_잘못된형식일때_테스트")
+    @DisplayName("주문서제작_잘못된형식일때_테스트")
     @Test
-    void 주문서제작서비스_잘못된형식일때_테스트() {
-        assertThatThrownBy(() -> orderSheetMakingService.run("[콜라-10],물-3", originalCatalog))
+    void 주문서제작_잘못된형식일때_테스트() {
+        assertThatThrownBy(() -> orderParser.run("[콜라-10],물-3", originalCatalog))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INVALID_ORDER_FORMAT);
     }
 
-    @DisplayName("주문서제작서비스_존재하지않는제품일때_테스트")
+    @DisplayName("주문서제작_존재하지않는제품일때_테스트")
     @Test
-    void 주문서제작서비스_존재하지않는제품일때_테스트() {
-        assertThatThrownBy(() -> orderSheetMakingService.run("[콜라-10],[맥주-3]", originalCatalog))
+    void 주문서제작_존재하지않는제품일때_테스트() {
+        assertThatThrownBy(() -> orderParser.run("[콜라-10],[맥주-3]", originalCatalog))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.NON_EXISTENT_PRODUCT);
     }
 
-    @DisplayName("주문서제작서비스_재고의수량을초과했을때_테스트")
+    @DisplayName("주문서제작_재고의수량을초과했을때_테스트")
     @Test
-    void 주문서제작서비스_재고의수량을초과했을때_테스트() {
-        assertThatThrownBy(() -> orderSheetMakingService.run("[콜라-21],[물-1]", originalCatalog))
+    void 주문서제작_재고의수량을초과했을때_테스트() {
+        assertThatThrownBy(() -> orderParser.run("[콜라-21],[물-1]", originalCatalog))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INSUFFICIENT_STOCK);
     }
 
-    @DisplayName("주문서제작서비스_정상_테스트")
+    @DisplayName("주문서제작_정상_테스트")
     @Test
-    void 주문서제작서비스_정상_테스트() {
+    void 주문서제작_정상_테스트() {
         String orderRequest = "[콜라-10],[물-5]";
 
-        OrderSheet orderSheet = orderSheetMakingService.run(orderRequest, originalCatalog);
+        OrderSheet orderSheet = orderParser.run(orderRequest, originalCatalog);
 
         assertNotNull(orderSheet);
         assertEquals(2, orderSheet.getOrderSheet().size());

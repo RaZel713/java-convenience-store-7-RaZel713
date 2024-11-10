@@ -9,12 +9,12 @@ import store.custom.model.ReceiptDetails;
 import store.custom.model.order.OrderSheet;
 import store.custom.model.product.Products;
 import store.custom.model.promotion.Promotions;
-import store.custom.service.OrderSheetMakingService;
-import store.custom.service.PromotionDiscountService;
 import store.custom.service.editor.OrderSheetEditor;
 import store.custom.service.editor.ProductsEditor;
 import store.custom.service.filehandler.FileReader;
+import store.custom.service.maker.PromotionResultMaker;
 import store.custom.service.maker.ReceiptDetailsMaker;
+import store.custom.service.parser.OrderParser;
 import store.custom.service.parser.ProductParser;
 import store.custom.service.parser.PromotionParser;
 import store.custom.service.parser.ResponseParser;
@@ -22,20 +22,20 @@ import store.custom.view.InputView;
 import store.custom.view.OutputView;
 
 public class StoreController {
-    private final ReceiptDetailsMaker receiptDetailsMaker;
     private final OrderSheetEditor orderSheetEditor;
-    private final OrderSheetMakingService orderSheetMakingService;
-    private final PromotionDiscountService promotionDiscountService;
+    private final PromotionResultMaker promotionResultsMaker;
+    private final ReceiptDetailsMaker receiptDetailsMaker;
+    private final OrderParser orderParser;
     private final ResponseParser responseParser;
 
     private final InputView inputView;
     private final OutputView outputView;
 
     public StoreController(InputView inputView, OutputView outputView) {
-        this.receiptDetailsMaker = new ReceiptDetailsMaker();
         this.orderSheetEditor = new OrderSheetEditor();
-        this.orderSheetMakingService = new OrderSheetMakingService();
-        this.promotionDiscountService = new PromotionDiscountService();
+        this.promotionResultsMaker = new PromotionResultMaker();
+        this.receiptDetailsMaker = new ReceiptDetailsMaker();
+        this.orderParser = new OrderParser();
         this.responseParser = new ResponseParser();
 
         this.inputView = inputView;
@@ -68,23 +68,25 @@ public class StoreController {
     private String handleStoreOrder(Products productCatalog, Promotions promotionCatalog) {
         outputView.displayInventoryStatus(productCatalog); // 재고 내역 출력
 
-        OrderSheet orderSheet = inputOrderRequest(productCatalog); // 주문서 만들기
-
-        promotionDiscountService.run(productCatalog, promotionCatalog, orderSheet); // 주문서 정보 추가 입력
-
-        List<List<Integer>> orderSheetPromotionResults =
-                promotionDiscountService.createPromotionResults(productCatalog, orderSheet); // 프로모션 결과지 만들기
-
-        handlePromotionResults(orderSheet, orderSheetPromotionResults); // 프로모션 결과지를 주문서에 반영
-
-        ProductsEditor.adjustInventoryForOrders(orderSheet, productCatalog); // 주문서에 맞춰 재고 관리
-
-        String membershipResponse = inputResponseForMembership();
-        ReceiptDetails receiptDetails = receiptDetailsMaker.run(orderSheet, membershipResponse);
+        OrderSheet orderSheet = handleOrderSheet(productCatalog, promotionCatalog);
+        ReceiptDetails receiptDetails = receiptDetailsMaker.run(orderSheet, inputResponseForMembership());
 
         outputView.displayReceipt(orderSheet, receiptDetails); // 레시피 출력
 
         return inputResponseForAdditionalPurchase();
+    }
+
+    // 주문서 처리 메서드
+    private OrderSheet handleOrderSheet(Products productCatalog, Promotions promotionCatalog) {
+        OrderSheet orderSheet = inputOrderRequest(productCatalog);
+        orderSheetEditor.addPromotionInfo(productCatalog, promotionCatalog, orderSheet);
+
+        List<List<Integer>> orderSheetPromotionResults =
+                promotionResultsMaker.createPromotionResults(productCatalog, orderSheet); // 프로모션 결과지 만들기
+        handlePromotionResults(orderSheet, orderSheetPromotionResults); // 프로모션 결과지를 주문서에 반영
+        ProductsEditor.adjustInventoryForOrders(orderSheet, productCatalog); // 주문서에 맞춰 재고 관리
+
+        return orderSheet;
     }
 
     // 프로모션 행사 적용 결과 처리 메서드
@@ -139,7 +141,7 @@ public class StoreController {
         while (true) {
             try {
                 String orderRequest = inputView.askForProductsToPurchase();
-                return orderSheetMakingService.run(orderRequest, productCatalog);
+                return orderParser.run(orderRequest, productCatalog);
             } catch (IllegalArgumentException e) {
                 outputView.displayErrorMessage(e.getMessage());
             }
