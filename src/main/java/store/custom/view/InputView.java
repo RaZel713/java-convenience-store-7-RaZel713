@@ -1,5 +1,6 @@
 package store.custom.view;
 
+import static store.custom.view.DisplayConstants.ADDITIONAL_PURCHASE_PROMPT;
 import static store.custom.view.DisplayConstants.MEMBERSHIP_DISCOUNT_PROMPT;
 import static store.custom.view.DisplayConstants.NO_PROMOTION_APPLIED_PROMPT;
 import static store.custom.view.DisplayConstants.PRODUCT_INPUT_PROMPT;
@@ -27,6 +28,11 @@ public class InputView {
 
     public String inputMembershipDiscount() {
         System.out.println(MEMBERSHIP_DISCOUNT_PROMPT);
+        return Console.readLine();
+    }
+
+    public String askForAdditionalPurchase() {
+        System.out.println(ADDITIONAL_PURCHASE_PROMPT);
         return Console.readLine();
     }
 }

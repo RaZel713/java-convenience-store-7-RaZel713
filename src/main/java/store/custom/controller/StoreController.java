@@ -45,8 +45,11 @@ public class StoreController {
         Products productCatalog = setUpProductCatalog();
         Promotions promotionCatalog = setUpPromotionCatalog();
 
-        // 종료시까지 반복할 것
-        handleStoreOrder(productCatalog, promotionCatalog);
+        String repeat = "Y";
+
+        while ("Y".equals(repeat)) {
+            repeat = handleStoreOrder(productCatalog, promotionCatalog);
+        }
     }
 
     // 편의점 프로그램 초기 셋업 메서드
@@ -61,7 +64,7 @@ public class StoreController {
         return PromotionParser.run(promotionLines);
     }
 
-    private void handleStoreOrder(Products productCatalog, Promotions promotionCatalog) {
+    private String handleStoreOrder(Products productCatalog, Promotions promotionCatalog) {
         outputView.displayProducts(productCatalog); // 재고 내역 출력
 
         OrderSheet orderSheet = inputOrderRequest(productCatalog); // 주문서 만들기
@@ -80,6 +83,8 @@ public class StoreController {
 
         outputView.displayReceipt(orderSheet, ReceiptDetailsCalculationService.run(orderSheet),
                 membershipDiscount); // 레시피 출력
+
+        return inputResponseForAdditionalPurchase();
     }
 
     // 프로모션 행사 적용 결과 처리 메서드
@@ -167,6 +172,17 @@ public class StoreController {
         while (true) {
             try {
                 String response = inputView.inputMembershipDiscount();
+                return responseParsingService.run(response);
+            } catch (IllegalArgumentException e) {
+                outputView.displayErrorMessage(e.getMessage());
+            }
+        }
+    } // 완료
+
+    private String inputResponseForAdditionalPurchase() {
+        while (true) {
+            try {
+                String response = inputView.askForAdditionalPurchase();
                 return responseParsingService.run(response);
             } catch (IllegalArgumentException e) {
                 outputView.displayErrorMessage(e.getMessage());
