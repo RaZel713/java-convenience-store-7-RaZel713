@@ -2,6 +2,7 @@ package store.custom.service.maker;
 
 import static store.custom.constants.NumberConstants.DISCOUNT_RATE;
 import static store.custom.constants.NumberConstants.MEMBERSHIP_DISCOUNT_LIMIT;
+import static store.custom.constants.StringConstants.RESPONSE_NO;
 
 import store.custom.model.ReceiptDetails;
 import store.custom.model.order.OrderSheet;
@@ -60,7 +61,7 @@ public class ReceiptDetailsMaker {
     }
 
     private int calculateMembershipDiscount(int nonPromotionProductPrice, String response) {
-        if (response.equals("N")) {
+        if (response.equals(RESPONSE_NO)) {
             return 0;
         }
         int discountPrice = nonPromotionProductPrice * DISCOUNT_RATE / 100;

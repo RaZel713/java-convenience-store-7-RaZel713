@@ -2,6 +2,7 @@ package store.custom.controller;
 
 import static store.custom.constants.StringConstants.PRODUCTS_FILE_PATH;
 import static store.custom.constants.StringConstants.PROMOTIONS_FILE_PATH;
+import static store.custom.constants.StringConstants.RESPONSE_YES;
 
 import java.util.List;
 import store.custom.model.ReceiptDetails;
@@ -45,9 +46,9 @@ public class StoreController {
         Products productCatalog = setUpProductCatalog();
         Promotions promotionCatalog = setUpPromotionCatalog();
 
-        String repeat = "Y";
+        String repeat = RESPONSE_YES;
 
-        while ("Y".equals(repeat)) {
+        while (RESPONSE_YES.equals(repeat)) {
             repeat = handleStoreOrder(productCatalog, promotionCatalog);
         }
     }
@@ -143,7 +144,7 @@ public class StoreController {
                 outputView.displayErrorMessage(e.getMessage());
             }
         }
-    } // 완료
+    }
 
     private String inputResponseForNoPromotion(String name, int noPromotionProductCount) {
         while (true) {
@@ -154,7 +155,7 @@ public class StoreController {
                 outputView.displayErrorMessage(e.getMessage());
             }
         }
-    } // 완료
+    }
 
     private String inputResponseForFreebie(String name, int additionalFreeProduct) {
         while (true) {
@@ -165,7 +166,7 @@ public class StoreController {
                 outputView.displayErrorMessage(e.getMessage());
             }
         }
-    } // 완료
+    }
 
     private String inputResponseForMembership() {
         while (true) {
@@ -176,7 +177,7 @@ public class StoreController {
                 outputView.displayErrorMessage(e.getMessage());
             }
         }
-    } // 완료
+    }
 
     private String inputResponseForAdditionalPurchase() {
         while (true) {
@@ -187,5 +188,5 @@ public class StoreController {
                 outputView.displayErrorMessage(e.getMessage());
             }
         }
-    } // 완료
+    }
 }

@@ -1,8 +1,10 @@
 package store.custom.service.parser;
 
+import static store.custom.constants.RegexConstants.SINGLE_COMMA;
+import static store.custom.constants.StringConstants.NO_PROMOTION;
+
 import java.util.ArrayList;
 import java.util.List;
-import store.custom.constants.RegexConstants;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
@@ -19,7 +21,7 @@ public class ProductParser {
 
     private static void parseProductLines(List<String> lines, List<Product> productCatalog) {
         for (int currentLine = 1; currentLine < lines.size(); currentLine++) {
-            List<String> currentLineParts = List.of(lines.get(currentLine).split(RegexConstants.SINGLE_COMMA));
+            List<String> currentLineParts = List.of(lines.get(currentLine).split(SINGLE_COMMA));
             Product product = createProduct(currentLineParts);
             productCatalog.add(product);
         }
@@ -48,7 +50,7 @@ public class ProductParser {
 
     private static String extractProductPromotion(List<String> parts) {
         String promotion = parts.get(3).trim();
-        if (promotion.equals("null")) {
+        if (promotion.equals(NO_PROMOTION)) {
             return null;
         }
         return promotion;

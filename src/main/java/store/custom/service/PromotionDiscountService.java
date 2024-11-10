@@ -1,5 +1,8 @@
 package store.custom.service;
 
+import static store.custom.constants.StringConstants.AFTER_PROMOTION_END;
+import static store.custom.constants.StringConstants.BEFORE_PROMOTION_START;
+
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,9 +17,6 @@ import store.custom.model.promotion.Promotion;
 import store.custom.model.promotion.Promotions;
 
 public class PromotionDiscountService {
-    private static final String BEFORE_PROMOTION_START = "프로모션 시작 전";
-    private static final String AFTER_PROMOTION_END = "프로모션 종료 후";
-
     public void run(Products productCatalog, Promotions promotions, OrderSheet orderSheet) {
         for (OrderedProduct orderProduct : orderSheet.getOrderSheet()) {
             setProductPriceAndPromotion(orderProduct, productCatalog); // 가격과 프로모션 정보 옮기기

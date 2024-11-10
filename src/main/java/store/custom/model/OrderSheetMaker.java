@@ -12,7 +12,7 @@ import store.custom.validator.Validator;
 
 public class OrderSheetMaker {
     public OrderSheet run(String orderRequest) {
-        Validator.validateEmptyInput(orderRequest); // 빈입력 유효성 검사
+        Validator.validateEmptyInput(orderRequest);
 
         List<String> orderForms = parseOrderRequest(orderRequest);
 
@@ -24,7 +24,7 @@ public class OrderSheetMaker {
         List<String> orderForm = StringUtils.splitStringByDelimiter(cleanedComma, SINGLE_COMMA);
         List<String> filteredOrderForms = StringUtils.trimAndFilterEmptyStrings(orderForm);
 
-        Validator.validateOrderForm(filteredOrderForms); // 입력 형식 검사
+        Validator.validateOrderForm(filteredOrderForms);
 
         return filteredOrderForms;
     }

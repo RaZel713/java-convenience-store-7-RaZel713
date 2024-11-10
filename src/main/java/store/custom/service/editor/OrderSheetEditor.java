@@ -1,16 +1,19 @@
 package store.custom.service.editor;
 
+import static store.custom.constants.StringConstants.RESPONSE_NO;
+import static store.custom.constants.StringConstants.RESPONSE_YES;
+
 import java.util.List;
 import store.custom.model.order.OrderedProduct;
 
 public class OrderSheetEditor {
     public void applyResponseForNoPromotion(String response, List<Integer> promotionResult,
                                             OrderedProduct orderedProduct) {
-        if (response.equals("Y")) {
+        if (response.equals(RESPONSE_YES)) {
             processPurchaseWithNoDiscount(orderedProduct, promotionResult);
         }
 
-        if (response.equals("N")) {
+        if (response.equals(RESPONSE_NO)) {
             processNonPurchaseWithNoDiscount(orderedProduct, promotionResult);
         }
     }
@@ -28,13 +31,12 @@ public class OrderSheetEditor {
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getBuy());
     }
 
-
     public void applyResponseForFreeProduct(String response, List<Integer> promotionResult,
                                             OrderedProduct orderedProduct) {
-        if (response.equals("Y")) {
+        if (response.equals(RESPONSE_YES)) {
             processAdditionalPromotionApplied(orderedProduct, promotionResult);
         }
-        if (response.equals("N")) {
+        if (response.equals(RESPONSE_NO)) {
             processAdditionalPromotionNotApplied(orderedProduct, promotionResult);
         }
     }
@@ -51,7 +53,6 @@ public class OrderSheetEditor {
         orderedProduct.setGet(orderedProduct.getGet() * promotionResult.get(0));
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getBuy());
     }
-
 
     public void computeTotalWithoutPromotion(OrderedProduct orderedProduct) {
         orderedProduct.setTotalPrice(orderedProduct.getTotalPrice() * orderedProduct.getQuantity()); // 총가격

@@ -1,6 +1,8 @@
 package store.custom.validator;
 
 import static store.custom.constants.RegexConstants.PRODUCT_ORDER_REGEX;
+import static store.custom.constants.StringConstants.RESPONSE_NO;
+import static store.custom.constants.StringConstants.RESPONSE_YES;
 import static store.custom.validator.CustomErrorMessages.INVALID_INPUT;
 
 import java.util.List;
@@ -80,7 +82,7 @@ public class Validator {
     }
 
     public static void validateYesOrNoInput(String response) {
-        if (!response.equals("Y") && !response.equals("N")) {
+        if (!response.equals(RESPONSE_YES) && !response.equals(RESPONSE_NO)) {
             throw new IllegalArgumentException(INVALID_INPUT);
         }
     }
