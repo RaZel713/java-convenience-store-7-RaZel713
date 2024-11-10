@@ -19,7 +19,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 10, 1000, "탄산2+1", 2, 1);
 
-        orderSheetEditService.applyNonDiscountedPurchaseDecision(response, promotionResult, orderedProduct);
+        orderSheetEditService.applyResponseForNoPromotion(response, promotionResult, orderedProduct);
 
         assertEquals(7, orderedProduct.getBuy());
         assertEquals(3, orderedProduct.getGet());
@@ -35,7 +35,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 10, 1000, "탄산2+1", 2, 1);
 
-        orderSheetEditService.applyNonDiscountedPurchaseDecision(response, promotionResult, orderedProduct);
+        orderSheetEditService.applyResponseForNoPromotion(response, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(3, orderedProduct.getGet());
@@ -51,7 +51,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 8, 1000, "탄산2+1", 2, 1);
 
-        orderSheetEditService.applyAdditionalPromotionDecision(response, promotionResult, orderedProduct);
+        orderSheetEditService.applyResponseForFreeProduct(response, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(9, orderedProduct.getQuantity());
@@ -67,7 +67,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 8, 1000, "탄산2+1", 2, 1);
 
-        orderSheetEditService.applyAdditionalPromotionDecision(response, promotionResult, orderedProduct);
+        orderSheetEditService.applyResponseForFreeProduct(response, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(8, orderedProduct.getQuantity());

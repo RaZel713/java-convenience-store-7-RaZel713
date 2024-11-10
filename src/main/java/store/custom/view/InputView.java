@@ -13,13 +13,13 @@ public class InputView {
         return Console.readLine();
     }
 
-    public String askForFreeProductAddition(String productName, int freeProductCount) {
+    public String askForFreebie(String productName, int freeProductCount) {
         String message = String.format(PROMOTION_FREE_ITEM_PROMPT, productName, freeProductCount);
         System.out.println(message);
         return Console.readLine();
     }
 
-    public String askForNoPromotionDiscount(String productName, int productsWithoutPromotion) {
+    public String askForNoPromotion(String productName, int productsWithoutPromotion) {
         String message = String.format(NO_PROMOTION_APPLIED_PROMPT, productName, productsWithoutPromotion);
         System.out.println(message);
         return Console.readLine();

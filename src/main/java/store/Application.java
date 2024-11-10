@@ -6,10 +6,10 @@ import store.custom.view.OutputView;
 
 public class Application {
     public static void main(String[] args) {
-        OutputView outputView = new OutputView();
         InputView inputView = new InputView();
+        OutputView outputView = new OutputView();
 
-        StoreController storeController = new StoreController(outputView, inputView);
+        StoreController storeController = new StoreController(inputView, outputView);
         storeController.start();
     }
 }

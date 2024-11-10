@@ -5,7 +5,6 @@ import static store.custom.constants.StringConstants.PROMOTIONS_FILE_PATH;
 
 import java.util.List;
 import store.custom.model.OrderSheet;
-import store.custom.model.OrderedProduct;
 import store.custom.model.product.Products;
 import store.custom.model.promotion.Promotions;
 import store.custom.service.FileReader;
@@ -22,105 +21,156 @@ import store.custom.view.InputView;
 import store.custom.view.OutputView;
 
 public class StoreController {
-    private final OutputView outputView;
-    private final InputView inputView;
+    private final MemberShipDiscountService memberShipDiscountService;
+    private final OrderSheetEditService orderSheetEditService;
     private final OrderSheetMakingService orderSheetMakingService;
     private final PromotionDiscountService promotionDiscountService;
     private final ResponseParsingService responseParsingService;
-    private final OrderSheetEditService orderSheetEditService;
-    private final MemberShipDiscountService memberShipDiscountService;
 
-    public StoreController(OutputView outputView, InputView inputView) {
-        this.outputView = outputView;
-        this.inputView = inputView;
+    private final InputView inputView;
+    private final OutputView outputView;
+
+    public StoreController(InputView inputView, OutputView outputView) {
+        this.memberShipDiscountService = new MemberShipDiscountService();
+        this.orderSheetEditService = new OrderSheetEditService();
         this.orderSheetMakingService = new OrderSheetMakingService();
         this.promotionDiscountService = new PromotionDiscountService();
         this.responseParsingService = new ResponseParsingService();
-        this.orderSheetEditService = new OrderSheetEditService();
-        this.memberShipDiscountService = new MemberShipDiscountService();
+
+        this.inputView = inputView;
+        this.outputView = outputView;
     }
 
     public void start() {
+        Products productCatalog = setUpProductCatalog();
+        Promotions promotionCatalog = setUpPromotionCatalog();
+
+        // 종료시까지 반복할 것
+        handleStoreOrder(productCatalog, promotionCatalog);
+    }
+
+    // 편의점 프로그램 초기 셋업 메서드
+    private Products setUpProductCatalog() {
         List<String> productsLines = FileReader.run(PRODUCTS_FILE_PATH);
         Products productCatalog = ProductParser.run(productsLines);
-        productCatalog = ProductCatalogEditor.run(productCatalog);
+        return ProductCatalogEditor.run(productCatalog);
+    }
 
-        outputView.displayProducts(productCatalog);
-
+    private Promotions setUpPromotionCatalog() {
         List<String> promotionLines = FileReader.run(PROMOTIONS_FILE_PATH);
-        Promotions promotions = PromotionParser.run(promotionLines);
+        return PromotionParser.run(promotionLines);
+    }
 
-        String orderRequest = inputView.inputProductsToPurchase();
-        OrderSheet orderSheet = orderSheetMakingService.run(orderRequest, productCatalog);
+    private void handleStoreOrder(Products productCatalog, Promotions promotionCatalog) {
+        outputView.displayProducts(productCatalog); // 재고 내역 출력
 
-        promotionDiscountService.run(productCatalog, promotions, orderSheet);
+        OrderSheet orderSheet = inputOrderRequest(productCatalog); // 주문서 만들기
+
+        promotionDiscountService.run(productCatalog, promotionCatalog, orderSheet); // 주문서 정보 추가 입력
 
         List<List<Integer>> orderSheetPromotionResults =
-                promotionDiscountService.createPromotionResults(productCatalog, orderSheet);
+                promotionDiscountService.createPromotionResults(productCatalog, orderSheet); // 프로모션 결과지 만들기
 
-        handlePromotionResults(orderSheet, orderSheetPromotionResults);
-        ProductCatalogEditor.adjustInventoryForOrders(orderSheet, productCatalog);
+        handlePromotionResults(orderSheet, orderSheetPromotionResults); // 프로모션 결과지를 주문서에 반영
 
-        String membershipResponse = inputView.inputMembershipDiscount();
+        ProductCatalogEditor.adjustInventoryForOrders(orderSheet, productCatalog); // 주문서에 맞춰 재고 관리
 
-        membershipResponse = responseParsingService.run(membershipResponse);
+        String membershipResponse = inputResponseForMembership();
         int membershipDiscount = memberShipDiscountService.run(membershipResponse, orderSheet);
 
-        outputView.displayReceipt(orderSheet, ReceiptDetailsCalculationService.run(orderSheet), membershipDiscount);
+        outputView.displayReceipt(orderSheet, ReceiptDetailsCalculationService.run(orderSheet),
+                membershipDiscount); // 레시피 출력
     }
 
-    public void handlePromotionResults(OrderSheet orderSheet, List<List<Integer>> orderSheetPromotionResults) {
-        for (int currentIndex = 0; currentIndex < orderSheetPromotionResults.size(); currentIndex++) {
-            List<Integer> orderSheetPromotionResult = orderSheetPromotionResults.get(currentIndex);
+    // 프로모션 행사 적용 결과 처리 메서드
+    private void handlePromotionResults(OrderSheet orderSheet, List<List<Integer>> promotionResults) {
+        for (int currentIndex = 0; currentIndex < promotionResults.size(); currentIndex++) {
+            List<Integer> promotionResult = promotionResults.get(currentIndex);
 
-            if (orderSheetPromotionResult.equals(List.of(-1, -1, -1))) {
-                orderSheetEditService.computeTotalWithoutPromotion(orderSheet.getOrderSheetByIndex(currentIndex));
-            }
-
-            String name = getProductName(orderSheet, currentIndex);
-            int noPromotionProductCount = orderSheetPromotionResult.get(2);
-
-            String response = handleNoPromotion(noPromotionProductCount, name);
-            if (response != null) {
-                response = responseParsingService.run(response);
-                orderSheetEditService.applyNonDiscountedPurchaseDecision
-                        (response, orderSheetPromotionResult, orderSheet.getOrderSheetByIndex(currentIndex));
-            }
-
-            int promotionAdditionalCount = orderSheetPromotionResult.get(1);
-
-            response = handleFreeProductAddition(promotionAdditionalCount, name, orderSheet, currentIndex);
-            if (response != null) {
-                response = responseParsingService.run(response);
-                orderSheetEditService.applyAdditionalPromotionDecision
-                        (response, orderSheetPromotionResult, orderSheet.getOrderSheetByIndex(currentIndex));
-            }
+            handleNonPromotionProduct(orderSheet, promotionResult, currentIndex);
+            handleExcludedPromotionProduct(orderSheet, promotionResult, currentIndex);
+            handleAdditionalFreebie(orderSheet, promotionResult, currentIndex);
         }
     }
 
-    private String getProductName(OrderSheet orderSheet, int index) {
-        OrderedProduct orderedProduct = orderSheet.getOrderSheetByIndex(index);
-        return orderedProduct.getName();
-    }
-
-    private String handleNoPromotion(int noPromotionProductCount, String name) {
-        if (noPromotionProductCount > 0) {
-            return inputView.askForNoPromotionDiscount(name, noPromotionProductCount);
+    private void handleNonPromotionProduct(OrderSheet orderSheet, List<Integer> promotionResult, int index) {
+        if (promotionResult.equals(List.of(-1, -1, -1))) {
+            orderSheetEditService.computeTotalWithoutPromotion(orderSheet.getOrderSheetByIndex(index));
         }
-        return null;
     }
 
-    private String handleFreeProductAddition(int promotionAdditionalCount, String name, OrderSheet orderSheet,
-                                             int index) {
-        if (promotionAdditionalCount > 0) {
-            int additionalFreeProduct = getAdditionalFreeProduct(orderSheet, index);
-            return inputView.askForFreeProductAddition(name, additionalFreeProduct);
+    private void handleExcludedPromotionProduct(OrderSheet orderSheet, List<Integer> promotionResult, int index) {
+        String orderedProductName = getProductName(orderSheet, index);
+        int nonPromotionalProduct = promotionResult.get(2);
+
+        if (nonPromotionalProduct > 0) {
+            String responseForNoPromotion = inputResponseForNoPromotion(orderedProductName, nonPromotionalProduct);
+            orderSheetEditService.applyResponseForNoPromotion
+                    (responseForNoPromotion, promotionResult, orderSheet.getOrderSheetByIndex(index));
         }
-        return null;
     }
 
-    private int getAdditionalFreeProduct(OrderSheet orderSheet, int index) {
-        OrderedProduct orderedProduct = orderSheet.getOrderSheetByIndex(index);
-        return orderedProduct.getGet();
+    private void handleAdditionalFreebie(OrderSheet orderSheet, List<Integer> promotionResult, int index) {
+        String orderedProductName = getProductName(orderSheet, index);
+
+        if (promotionResult.get(1) > 0) {
+            int additionalFreebie = getAdditionalFreebie(orderSheet, index);
+            String responseForFreeProduct = inputResponseForFreebie(orderedProductName, additionalFreebie);
+            orderSheetEditService.applyResponseForFreeProduct
+                    (responseForFreeProduct, promotionResult, orderSheet.getOrderSheetByIndex(index));
+        }
     }
+
+    private String getProductName(OrderSheet orderSheet, int currentIndex) {
+        return orderSheet.getOrderSheetByIndex(currentIndex).getName();
+    }
+
+    private int getAdditionalFreebie(OrderSheet orderSheet, int currentIndex) {
+        return orderSheet.getOrderSheetByIndex(currentIndex).getGet();
+    }
+
+    // 사용자 입력 관련 메서드 (Error 시 재입력)
+    private OrderSheet inputOrderRequest(Products productCatalog) {
+        while (true) {
+            try {
+                String orderRequest = inputView.inputProductsToPurchase();
+                return orderSheetMakingService.run(orderRequest, productCatalog);
+            } catch (IllegalArgumentException e) {
+                outputView.displayErrorMessage(e.getMessage());
+            }
+        }
+    } // 완료
+
+    private String inputResponseForNoPromotion(String name, int noPromotionProductCount) {
+        while (true) {
+            try {
+                String response = inputView.askForNoPromotion(name, noPromotionProductCount);
+                return responseParsingService.run(response);
+            } catch (IllegalArgumentException e) {
+                outputView.displayErrorMessage(e.getMessage());
+            }
+        }
+    } // 완료
+
+    private String inputResponseForFreebie(String name, int additionalFreeProduct) {
+        while (true) {
+            try {
+                String response = inputView.askForFreebie(name, additionalFreeProduct);
+                return responseParsingService.run(response);
+            } catch (IllegalArgumentException e) {
+                outputView.displayErrorMessage(e.getMessage());
+            }
+        }
+    } // 완료
+
+    private String inputResponseForMembership() {
+        while (true) {
+            try {
+                String response = inputView.inputMembershipDiscount();
+                return responseParsingService.run(response);
+            } catch (IllegalArgumentException e) {
+                outputView.displayErrorMessage(e.getMessage());
+            }
+        }
+    } // 완료
 }

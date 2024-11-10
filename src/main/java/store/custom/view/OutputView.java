@@ -91,4 +91,8 @@ public class OutputView {
         }
         System.out.println(Receipt.DIVIDING_LINE.getFormat());
     }
+
+    public void displayErrorMessage(String errorMessage) {
+        System.out.println(errorMessage);
+    }
 }

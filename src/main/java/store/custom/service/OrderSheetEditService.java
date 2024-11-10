@@ -4,8 +4,8 @@ import java.util.List;
 import store.custom.model.OrderedProduct;
 
 public class OrderSheetEditService {
-    public void applyNonDiscountedPurchaseDecision(String response, List<Integer> promotionResult,
-                                                   OrderedProduct orderedProduct) {
+    public void applyResponseForNoPromotion(String response, List<Integer> promotionResult,
+                                            OrderedProduct orderedProduct) {
         if (response.equals("Y")) {
             processPurchaseWithNoDiscount(orderedProduct, promotionResult);
         }
@@ -29,8 +29,8 @@ public class OrderSheetEditService {
     }
 
 
-    public void applyAdditionalPromotionDecision(String response, List<Integer> promotionResult,
-                                                 OrderedProduct orderedProduct) {
+    public void applyResponseForFreeProduct(String response, List<Integer> promotionResult,
+                                            OrderedProduct orderedProduct) {
         if (response.equals("Y")) {
             processAdditionalPromotionApplied(orderedProduct, promotionResult);
         }
