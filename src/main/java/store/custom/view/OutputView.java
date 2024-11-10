@@ -17,13 +17,12 @@ import store.custom.model.product.Products;
 public class OutputView {
     // 재고 현황 출력 메서드
     public void displayInventoryStatus(Products productCatalog) {
+        System.out.println();
         displayWelcomeMessage();
 
         for (Product product : productCatalog.getProducts()) {
             displayProductInfo(product);
         }
-
-        System.out.println();
     }
 
     private void displayWelcomeMessage() {
@@ -65,14 +64,12 @@ public class OutputView {
 
     // 영수증 출력 메서드
     public void displayReceipt(OrderSheet orderSheet, ReceiptDetails receiptDetails) {
+        System.out.println();
         displayPurchaseHistory(orderSheet);
+
         displayFreebie(orderSheet);
 
-        // 구매 결과
-        System.out.println(Receipt.TOTAL.format(receiptDetails.getTotalQuantity(), receiptDetails.getTotalPrice()));
-        System.out.println(Receipt.PROMOTION_DISCOUNT.format(receiptDetails.getPromotionDiscount()));
-        System.out.println(Receipt.MEMBERSHIP_DISCOUNT.format(receiptDetails.getMembershipDiscount()));
-        System.out.println(Receipt.FINAL_PRICE.format(receiptDetails.getFinalPrice()));
+        displayReceiptDetails(receiptDetails);
     }
 
     private void displayPurchaseHistory(OrderSheet orderSheet) {
@@ -93,6 +90,13 @@ public class OutputView {
             }
         }
         System.out.println(Receipt.DIVIDING_LINE.getFormat());
+    }
+
+    private void displayReceiptDetails(ReceiptDetails receiptDetails) {
+        System.out.println(Receipt.TOTAL.format(receiptDetails.getTotalQuantity(), receiptDetails.getTotalPrice()));
+        System.out.println(Receipt.PROMOTION_DISCOUNT.format(receiptDetails.getPromotionDiscount()));
+        System.out.println(Receipt.MEMBERSHIP_DISCOUNT.format(receiptDetails.getMembershipDiscount()));
+        System.out.println(Receipt.FINAL_PRICE.format(receiptDetails.getFinalPrice()));
     }
 
     // 에러 메시지 출력 메서드
