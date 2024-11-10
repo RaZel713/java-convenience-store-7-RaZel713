@@ -19,24 +19,12 @@ public class Promotion {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getBuy() {
         return buy;
     }
 
-    public void setBuy(int buy) {
-        this.buy = buy;
-    }
-
     public int getGet() {
         return get;
-    }
-
-    public void setGet(int get) {
-        this.get = get;
     }
 
     public String getStartDate() {

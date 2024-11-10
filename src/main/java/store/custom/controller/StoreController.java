@@ -65,7 +65,7 @@ public class StoreController {
         return PromotionParser.run(promotionLines);
     }
 
-    // 주문 처리 메서드
+    // 주문요청 처리 메서드
     private String handleStoreOrder(Products productCatalog, Promotions promotionCatalog) {
         outputView.displayInventoryStatus(productCatalog); // 재고 내역 출력
 
@@ -77,7 +77,7 @@ public class StoreController {
         return inputResponseForAdditionalPurchase();
     }
 
-    // 주문서 제작 메서드
+    // 주문서 처리 메서드
     private OrderSheet handleOrderSheet(Products productCatalog, Promotions promotionCatalog) {
         OrderSheet orderSheet = inputOrderRequest(productCatalog);
         orderSheetEditor.addPromotionInfo(productCatalog, promotionCatalog, orderSheet);
@@ -107,7 +107,7 @@ public class StoreController {
     }
 
     private void handleExcludedPromotionProduct(OrderSheet orderSheet, List<Integer> promotionResult, int index) {
-        String orderedProductName = getProductName(orderSheet, index);
+        String orderedProductName = orderSheet.getOrderSheetByIndex(index).getName();
         int nonPromotionalProduct = promotionResult.get(2);
 
         if (nonPromotionalProduct > 0) {
@@ -118,22 +118,14 @@ public class StoreController {
     }
 
     private void handleAdditionalFreebie(OrderSheet orderSheet, List<Integer> promotionResult, int index) {
-        String orderedProductName = getProductName(orderSheet, index);
+        String orderedProductName = orderSheet.getOrderSheetByIndex(index).getName();
 
         if (promotionResult.get(1) > 0) {
-            int additionalFreebie = getAdditionalFreebie(orderSheet, index);
+            int additionalFreebie = orderSheet.getOrderSheetByIndex(index).getGet();
             String responseForFreeProduct = inputResponseForFreebie(orderedProductName, additionalFreebie);
             orderSheetEditor.applyResponseForFreeProduct
                     (responseForFreeProduct, promotionResult, orderSheet.getOrderSheetByIndex(index));
         }
-    }
-
-    private String getProductName(OrderSheet orderSheet, int currentIndex) {
-        return orderSheet.getOrderSheetByIndex(currentIndex).getName();
-    }
-
-    private int getAdditionalFreebie(OrderSheet orderSheet, int currentIndex) {
-        return orderSheet.getOrderSheetByIndex(currentIndex).getGet();
     }
 
     // 사용자 입력 관련 메서드 (Error 시 재입력)

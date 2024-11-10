@@ -14,10 +14,6 @@ public class OrderSheet {
         return orderSheet;
     }
 
-    public int getOrderSheetSize() {
-        return orderSheet.size();
-    }
-
     public OrderedProduct getOrderSheetByIndex(int index) {
         if (index < 0 || index >= orderSheet.size()) {
             throw new IndexOutOfBoundsException("Invalid index: " + index);

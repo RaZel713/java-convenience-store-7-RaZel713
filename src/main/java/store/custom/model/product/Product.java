@@ -1,10 +1,10 @@
 package store.custom.model.product;
 
 public class Product {
-    private String name;
-    private int price;
+    private final String name;
+    private final int price;
     private int quantity;
-    private String promotion;
+    private final String promotion;
 
     public Product(String name, int price, int quantity, String promotion) {
         this.name = name;
@@ -17,16 +17,8 @@ public class Product {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getPrice() {
         return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public int getQuantity() {
@@ -39,9 +31,5 @@ public class Product {
 
     public String getPromotion() {
         return promotion;
-    }
-
-    public void setPromotion(String promotion) {
-        this.promotion = promotion;
     }
 }
