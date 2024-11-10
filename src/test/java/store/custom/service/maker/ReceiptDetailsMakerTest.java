@@ -16,7 +16,7 @@ class ReceiptDetailsMakerTest {
 
     @BeforeEach
     void setUp() {
-        OrderedProduct product1 = new OrderedProduct("콜라", 10, 7000, "탄산2+1", 7, 3);
+        OrderedProduct product1 = new OrderedProduct("콜라", 10, 10000, "탄산2+1", 7, 3);
         OrderedProduct product2 = new OrderedProduct("물", 5, 5000, null, 0, 0); // 프로모션 있는 제품
         orderSheet = new OrderSheet(Arrays.asList(product1, product2));
     }

@@ -42,8 +42,7 @@ public class ReceiptDetailsMaker {
         int price = 0;
         for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
             if (orderedProduct.getBuy() != 0) { // 프로모션 있을 때
-                int productPrice = orderedProduct.getTotalPrice() / orderedProduct.getBuy();
-                price += productPrice * orderedProduct.getQuantity();
+                price += orderedProduct.getTotalPrice();
             }
         }
         return price;
@@ -53,7 +52,7 @@ public class ReceiptDetailsMaker {
         int price = 0;
         for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
             if (orderedProduct.getBuy() != 0) { // 프로모션 있을 때
-                int productPrice = orderedProduct.getTotalPrice() / orderedProduct.getBuy();
+                int productPrice = orderedProduct.getTotalPrice() / orderedProduct.getQuantity();
                 price += productPrice * orderedProduct.getGet();
             }
         }

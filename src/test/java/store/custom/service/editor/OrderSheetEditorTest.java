@@ -108,7 +108,7 @@ public class OrderSheetEditorTest {
 
         assertEquals(7, orderedProduct.getBuy());
         assertEquals(3, orderedProduct.getGet());
-        assertEquals(7000, orderedProduct.getTotalPrice());
+        assertEquals(10000, orderedProduct.getTotalPrice());
         assertEquals(10, orderedProduct.getQuantity());
     }
 
@@ -125,7 +125,7 @@ public class OrderSheetEditorTest {
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(3, orderedProduct.getGet());
         assertEquals(9, orderedProduct.getQuantity());
-        assertEquals(6000, orderedProduct.getTotalPrice());
+        assertEquals(9000, orderedProduct.getTotalPrice());
     }
 
     @DisplayName("주문서에디터_증정품추가적용_테스트")
@@ -141,7 +141,7 @@ public class OrderSheetEditorTest {
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(9, orderedProduct.getQuantity());
         assertEquals(3, orderedProduct.getGet());
-        assertEquals(6000, orderedProduct.getTotalPrice());
+        assertEquals(9000, orderedProduct.getTotalPrice());
     }
 
     @DisplayName("주문서에디터_증정품추가미적용_테스트")
@@ -157,7 +157,7 @@ public class OrderSheetEditorTest {
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(8, orderedProduct.getQuantity());
         assertEquals(2, orderedProduct.getGet());
-        assertEquals(6000, orderedProduct.getTotalPrice());
+        assertEquals(8000, orderedProduct.getTotalPrice());
     }
 
     @DisplayName("주문서에디터_프로모션이없는경우_테스트")
