@@ -1,4 +1,4 @@
-package store.custom.service;
+package store.custom.service.editor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.custom.model.order.OrderedProduct;
-import store.custom.service.editor.OrderSheetEditor;
 
 public class OrderSheetEditorTest {
     private final OrderSheetEditor orderSheetEditor = new OrderSheetEditor();

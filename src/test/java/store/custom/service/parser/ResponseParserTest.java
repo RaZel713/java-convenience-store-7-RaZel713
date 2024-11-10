@@ -1,11 +1,10 @@
-package store.custom.service;
+package store.custom.service.parser;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.custom.service.parser.ResponseParser;
 import store.custom.validator.CustomErrorMessages;
 
 public class ResponseParserTest {

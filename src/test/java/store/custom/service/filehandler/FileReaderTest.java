@@ -1,4 +1,4 @@
-package store.custom.service;
+package store.custom.service.filehandler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static store.custom.constants.StringConstants.PRODUCTS_FILE_PATH;
@@ -6,7 +6,6 @@ import static store.custom.constants.StringConstants.PRODUCTS_FILE_PATH;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.custom.service.filehandler.FileReader;
 
 public class FileReaderTest {
 

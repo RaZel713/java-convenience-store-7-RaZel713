@@ -4,16 +4,16 @@ import static store.custom.constants.StringConstants.PRODUCTS_FILE_PATH;
 import static store.custom.constants.StringConstants.PROMOTIONS_FILE_PATH;
 
 import java.util.List;
+import store.custom.model.ReceiptDetails;
 import store.custom.model.order.OrderSheet;
 import store.custom.model.product.Products;
 import store.custom.model.promotion.Promotions;
-import store.custom.service.MemberShipDiscountService;
 import store.custom.service.OrderSheetMakingService;
 import store.custom.service.PromotionDiscountService;
-import store.custom.service.ReceiptSummaryService;
 import store.custom.service.editor.OrderSheetEditor;
 import store.custom.service.editor.ProductsEditor;
 import store.custom.service.filehandler.FileReader;
+import store.custom.service.maker.ReceiptDetailsMaker;
 import store.custom.service.parser.ProductParser;
 import store.custom.service.parser.PromotionParser;
 import store.custom.service.parser.ResponseParser;
@@ -21,7 +21,7 @@ import store.custom.view.InputView;
 import store.custom.view.OutputView;
 
 public class StoreController {
-    private final MemberShipDiscountService memberShipDiscountService;
+    private final ReceiptDetailsMaker receiptDetailsMaker;
     private final OrderSheetEditor orderSheetEditor;
     private final OrderSheetMakingService orderSheetMakingService;
     private final PromotionDiscountService promotionDiscountService;
@@ -31,7 +31,7 @@ public class StoreController {
     private final OutputView outputView;
 
     public StoreController(InputView inputView, OutputView outputView) {
-        this.memberShipDiscountService = new MemberShipDiscountService();
+        this.receiptDetailsMaker = new ReceiptDetailsMaker();
         this.orderSheetEditor = new OrderSheetEditor();
         this.orderSheetMakingService = new OrderSheetMakingService();
         this.promotionDiscountService = new PromotionDiscountService();
@@ -79,10 +79,9 @@ public class StoreController {
         ProductsEditor.adjustInventoryForOrders(orderSheet, productCatalog); // 주문서에 맞춰 재고 관리
 
         String membershipResponse = inputResponseForMembership();
-        int membershipDiscount = memberShipDiscountService.run(membershipResponse, orderSheet);
+        ReceiptDetails receiptDetails = receiptDetailsMaker.run(orderSheet, membershipResponse);
 
-        outputView.displayReceipt(orderSheet, ReceiptSummaryService.run(orderSheet),
-                membershipDiscount); // 레시피 출력
+        outputView.displayReceipt(orderSheet, receiptDetails); // 레시피 출력
 
         return inputResponseForAdditionalPurchase();
     }

@@ -8,7 +8,7 @@ import static store.custom.view.DisplayConstants.PRODUCT_LIST_MESSAGE;
 import static store.custom.view.DisplayConstants.SPACE;
 import static store.custom.view.DisplayConstants.ZERO_STOCK_MESSAGE;
 
-import java.util.List;
+import store.custom.model.ReceiptDetails;
 import store.custom.model.order.OrderSheet;
 import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
@@ -22,7 +22,7 @@ public class OutputView {
         for (Product product : productCatalog.getProducts()) {
             displayProductInfo(product);
         }
-        
+
         System.out.println();
     }
 
@@ -64,15 +64,15 @@ public class OutputView {
     }
 
     // 영수증 출력 메서드
-    public void displayReceipt(OrderSheet orderSheet, List<Integer> num, int membershipDiscount) {
+    public void displayReceipt(OrderSheet orderSheet, ReceiptDetails receiptDetails) {
         displayPurchaseHistory(orderSheet);
         displayFreebie(orderSheet);
 
         // 구매 결과
-        System.out.println(Receipt.TOTAL.format(num.get(0), num.get(1)));
-        System.out.println(Receipt.EVENT_DISCOUNT.format(num.get(2)));
-        System.out.println(Receipt.MEMBERSHIP_DISCOUNT.format(membershipDiscount));
-        System.out.println(Receipt.FINAL_AMOUNT.format(num.get(1) - num.get(2) - membershipDiscount));
+        System.out.println(Receipt.TOTAL.format(receiptDetails.getTotalQuantity(), receiptDetails.getTotalPrice()));
+        System.out.println(Receipt.PROMOTION_DISCOUNT.format(receiptDetails.getPromotionDiscount()));
+        System.out.println(Receipt.MEMBERSHIP_DISCOUNT.format(receiptDetails.getMembershipDiscount()));
+        System.out.println(Receipt.FINAL_PRICE.format(receiptDetails.getFinalPrice()));
     }
 
     private void displayPurchaseHistory(OrderSheet orderSheet) {

@@ -1,4 +1,4 @@
-package store.custom.service;
+package store.custom.service.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.custom.model.promotion.Promotion;
 import store.custom.model.promotion.Promotions;
-import store.custom.service.parser.PromotionParser;
 
 public class PromotionParserTest {
 

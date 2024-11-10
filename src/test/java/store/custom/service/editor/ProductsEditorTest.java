@@ -1,4 +1,4 @@
-package store.custom.service;
+package store.custom.service.editor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,7 +10,6 @@ import store.custom.model.order.OrderSheet;
 import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
-import store.custom.service.editor.ProductsEditor;
 
 public class ProductsEditorTest {
 
