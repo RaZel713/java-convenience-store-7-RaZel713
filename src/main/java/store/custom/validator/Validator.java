@@ -3,8 +3,11 @@ package store.custom.validator;
 import static store.custom.constants.RegexConstants.PRODUCT_ORDER_REGEX;
 import static store.custom.constants.StringConstants.RESPONSE_NO;
 import static store.custom.constants.StringConstants.RESPONSE_YES;
+import static store.custom.validator.CustomErrorMessages.INVALID_FILE_PATH;
 import static store.custom.validator.CustomErrorMessages.INVALID_INPUT;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import store.custom.model.order.OrderSheet;
 import store.custom.model.order.OrderedProduct;
@@ -12,6 +15,12 @@ import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
 public class Validator {
+    public static void validateFilePath(String filePath) {
+        if (!Files.exists(Path.of(filePath))) {
+            throw new IllegalArgumentException(INVALID_FILE_PATH + filePath);
+        }
+    }
+
     public static void validateEmptyInput(String input) {
         checkNullInput(input);
         checkEmptyInput(input);
