@@ -1,4 +1,4 @@
-package store.custom.service;
+package store.custom.service.filehandler;
 
 import java.io.IOException;
 import java.nio.file.Files;

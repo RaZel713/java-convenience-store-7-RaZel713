@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.custom.model.OrderSheet;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderSheet;
+import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 

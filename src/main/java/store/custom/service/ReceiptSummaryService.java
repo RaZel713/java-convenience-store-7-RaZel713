@@ -2,10 +2,10 @@ package store.custom.service;
 
 import java.util.Arrays;
 import java.util.List;
-import store.custom.model.OrderSheet;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderSheet;
+import store.custom.model.order.OrderedProduct;
 
-public class ReceiptDetailsCalculationService {
+public class ReceiptSummaryService {
     public static List<Integer> run(OrderSheet orderSheet) {
         int totalPrice = 0;
         int totalQuantity = 0;

@@ -1,4 +1,4 @@
-package store.custom.service;
+package store.custom.service.parser;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,10 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderedProduct;
+import store.custom.service.editor.OrderSheetEditor;
 
-public class OrderSheetEditServiceTest {
-    private final OrderSheetEditService orderSheetEditService = new OrderSheetEditService();
+public class OrderSheetEditorTest {
+    private final OrderSheetEditor orderSheetEditor = new OrderSheetEditor();
 
     @DisplayName("주문서편집서비스_할인되지않는제품구매_테스트")
     @Test
@@ -19,7 +20,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 10, 1000, "탄산2+1", 2, 1);
 
-        orderSheetEditService.applyResponseForNoPromotion(response, promotionResult, orderedProduct);
+        orderSheetEditor.applyResponseForNoPromotion(response, promotionResult, orderedProduct);
 
         assertEquals(7, orderedProduct.getBuy());
         assertEquals(3, orderedProduct.getGet());
@@ -35,7 +36,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 10, 1000, "탄산2+1", 2, 1);
 
-        orderSheetEditService.applyResponseForNoPromotion(response, promotionResult, orderedProduct);
+        orderSheetEditor.applyResponseForNoPromotion(response, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(3, orderedProduct.getGet());
@@ -51,7 +52,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 8, 1000, "탄산2+1", 2, 1);
 
-        orderSheetEditService.applyResponseForFreeProduct(response, promotionResult, orderedProduct);
+        orderSheetEditor.applyResponseForFreeProduct(response, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(9, orderedProduct.getQuantity());
@@ -67,7 +68,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 8, 1000, "탄산2+1", 2, 1);
 
-        orderSheetEditService.applyResponseForFreeProduct(response, promotionResult, orderedProduct);
+        orderSheetEditor.applyResponseForFreeProduct(response, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(8, orderedProduct.getQuantity());
@@ -82,7 +83,7 @@ public class OrderSheetEditServiceTest {
         OrderedProduct orderedProduct = new OrderedProduct(
                 "콜라", 8, 1000, null, 0, 0);
 
-        orderSheetEditService.computeTotalWithoutPromotion(orderedProduct);
+        orderSheetEditor.computeTotalWithoutPromotion(orderedProduct);
 
         assertEquals(0, orderedProduct.getBuy());
         assertEquals(0, orderedProduct.getGet());

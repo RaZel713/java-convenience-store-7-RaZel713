@@ -5,15 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import store.custom.service.parser.ResponseParser;
 import store.custom.validator.CustomErrorMessages;
 
-public class ResponseParsingServiceTest {
-    private final ResponseParsingService responseParsingService = new ResponseParsingService();
+public class ResponseParserTest {
+    private final ResponseParser responseParser = new ResponseParser();
 
     @DisplayName("응답변환기_빈문자열_테스트")
     @Test
     void 응답변환기_빈문자열_테스트() {
-        assertThatThrownBy(() -> responseParsingService.run(""))
+        assertThatThrownBy(() -> responseParser.run(""))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INVALID_INPUT);
     }
@@ -21,7 +22,7 @@ public class ResponseParsingServiceTest {
     @DisplayName("응답변환기_Y나N이아닌경우_테스트")
     @Test
     void 응답변환기_Y나N이아닌경우_테스트() {
-        assertThatThrownBy(() -> responseParsingService.run("A"))
+        assertThatThrownBy(() -> responseParser.run("A"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(CustomErrorMessages.INVALID_INPUT);
     }
@@ -29,12 +30,12 @@ public class ResponseParsingServiceTest {
     @DisplayName("응답변환기_공백제거_테스트")
     @Test
     void 응답변환기_공백제거_테스트() {
-        assertEquals("Y", responseParsingService.run(" Y  "));
+        assertEquals("Y", responseParser.run(" Y  "));
     }
 
     @DisplayName("응답변환기_정상_테스트")
     @Test
     void 응답변환기_정상_테스트() {
-        assertEquals("Y", responseParsingService.run("Y"));
+        assertEquals("Y", responseParser.run("Y"));
     }
 }

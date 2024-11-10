@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.custom.model.promotion.Promotion;
 import store.custom.model.promotion.Promotions;
+import store.custom.service.parser.PromotionParser;
 
 public class PromotionParserTest {
 

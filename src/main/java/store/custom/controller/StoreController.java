@@ -4,38 +4,38 @@ import static store.custom.constants.StringConstants.PRODUCTS_FILE_PATH;
 import static store.custom.constants.StringConstants.PROMOTIONS_FILE_PATH;
 
 import java.util.List;
-import store.custom.model.OrderSheet;
+import store.custom.model.order.OrderSheet;
 import store.custom.model.product.Products;
 import store.custom.model.promotion.Promotions;
-import store.custom.service.FileReader;
 import store.custom.service.MemberShipDiscountService;
-import store.custom.service.OrderSheetEditService;
 import store.custom.service.OrderSheetMakingService;
-import store.custom.service.ProductCatalogEditor;
-import store.custom.service.ProductParser;
 import store.custom.service.PromotionDiscountService;
-import store.custom.service.PromotionParser;
-import store.custom.service.ReceiptDetailsCalculationService;
-import store.custom.service.ResponseParsingService;
+import store.custom.service.ReceiptSummaryService;
+import store.custom.service.editor.OrderSheetEditor;
+import store.custom.service.editor.ProductsEditor;
+import store.custom.service.filehandler.FileReader;
+import store.custom.service.parser.ProductParser;
+import store.custom.service.parser.PromotionParser;
+import store.custom.service.parser.ResponseParser;
 import store.custom.view.InputView;
 import store.custom.view.OutputView;
 
 public class StoreController {
     private final MemberShipDiscountService memberShipDiscountService;
-    private final OrderSheetEditService orderSheetEditService;
+    private final OrderSheetEditor orderSheetEditor;
     private final OrderSheetMakingService orderSheetMakingService;
     private final PromotionDiscountService promotionDiscountService;
-    private final ResponseParsingService responseParsingService;
+    private final ResponseParser responseParser;
 
     private final InputView inputView;
     private final OutputView outputView;
 
     public StoreController(InputView inputView, OutputView outputView) {
         this.memberShipDiscountService = new MemberShipDiscountService();
-        this.orderSheetEditService = new OrderSheetEditService();
+        this.orderSheetEditor = new OrderSheetEditor();
         this.orderSheetMakingService = new OrderSheetMakingService();
         this.promotionDiscountService = new PromotionDiscountService();
-        this.responseParsingService = new ResponseParsingService();
+        this.responseParser = new ResponseParser();
 
         this.inputView = inputView;
         this.outputView = outputView;
@@ -56,7 +56,7 @@ public class StoreController {
     private Products setUpProductCatalog() {
         List<String> productsLines = FileReader.run(PRODUCTS_FILE_PATH);
         Products productCatalog = ProductParser.run(productsLines);
-        return ProductCatalogEditor.run(productCatalog);
+        return ProductsEditor.run(productCatalog);
     }
 
     private Promotions setUpPromotionCatalog() {
@@ -65,7 +65,7 @@ public class StoreController {
     }
 
     private String handleStoreOrder(Products productCatalog, Promotions promotionCatalog) {
-        outputView.displayProducts(productCatalog); // 재고 내역 출력
+        outputView.displayInventoryStatus(productCatalog); // 재고 내역 출력
 
         OrderSheet orderSheet = inputOrderRequest(productCatalog); // 주문서 만들기
 
@@ -76,12 +76,12 @@ public class StoreController {
 
         handlePromotionResults(orderSheet, orderSheetPromotionResults); // 프로모션 결과지를 주문서에 반영
 
-        ProductCatalogEditor.adjustInventoryForOrders(orderSheet, productCatalog); // 주문서에 맞춰 재고 관리
+        ProductsEditor.adjustInventoryForOrders(orderSheet, productCatalog); // 주문서에 맞춰 재고 관리
 
         String membershipResponse = inputResponseForMembership();
         int membershipDiscount = memberShipDiscountService.run(membershipResponse, orderSheet);
 
-        outputView.displayReceipt(orderSheet, ReceiptDetailsCalculationService.run(orderSheet),
+        outputView.displayReceipt(orderSheet, ReceiptSummaryService.run(orderSheet),
                 membershipDiscount); // 레시피 출력
 
         return inputResponseForAdditionalPurchase();
@@ -100,7 +100,7 @@ public class StoreController {
 
     private void handleNonPromotionProduct(OrderSheet orderSheet, List<Integer> promotionResult, int index) {
         if (promotionResult.equals(List.of(-1, -1, -1))) {
-            orderSheetEditService.computeTotalWithoutPromotion(orderSheet.getOrderSheetByIndex(index));
+            orderSheetEditor.computeTotalWithoutPromotion(orderSheet.getOrderSheetByIndex(index));
         }
     }
 
@@ -110,7 +110,7 @@ public class StoreController {
 
         if (nonPromotionalProduct > 0) {
             String responseForNoPromotion = inputResponseForNoPromotion(orderedProductName, nonPromotionalProduct);
-            orderSheetEditService.applyResponseForNoPromotion
+            orderSheetEditor.applyResponseForNoPromotion
                     (responseForNoPromotion, promotionResult, orderSheet.getOrderSheetByIndex(index));
         }
     }
@@ -121,7 +121,7 @@ public class StoreController {
         if (promotionResult.get(1) > 0) {
             int additionalFreebie = getAdditionalFreebie(orderSheet, index);
             String responseForFreeProduct = inputResponseForFreebie(orderedProductName, additionalFreebie);
-            orderSheetEditService.applyResponseForFreeProduct
+            orderSheetEditor.applyResponseForFreeProduct
                     (responseForFreeProduct, promotionResult, orderSheet.getOrderSheetByIndex(index));
         }
     }
@@ -138,7 +138,7 @@ public class StoreController {
     private OrderSheet inputOrderRequest(Products productCatalog) {
         while (true) {
             try {
-                String orderRequest = inputView.inputProductsToPurchase();
+                String orderRequest = inputView.askForProductsToPurchase();
                 return orderSheetMakingService.run(orderRequest, productCatalog);
             } catch (IllegalArgumentException e) {
                 outputView.displayErrorMessage(e.getMessage());
@@ -149,8 +149,8 @@ public class StoreController {
     private String inputResponseForNoPromotion(String name, int noPromotionProductCount) {
         while (true) {
             try {
-                String response = inputView.askForNoPromotion(name, noPromotionProductCount);
-                return responseParsingService.run(response);
+                String response = inputView.askForProductWithoutPromotion(name, noPromotionProductCount);
+                return responseParser.run(response);
             } catch (IllegalArgumentException e) {
                 outputView.displayErrorMessage(e.getMessage());
             }
@@ -161,7 +161,7 @@ public class StoreController {
         while (true) {
             try {
                 String response = inputView.askForFreebie(name, additionalFreeProduct);
-                return responseParsingService.run(response);
+                return responseParser.run(response);
             } catch (IllegalArgumentException e) {
                 outputView.displayErrorMessage(e.getMessage());
             }
@@ -171,8 +171,8 @@ public class StoreController {
     private String inputResponseForMembership() {
         while (true) {
             try {
-                String response = inputView.inputMembershipDiscount();
-                return responseParsingService.run(response);
+                String response = inputView.askForMembershipDiscount();
+                return responseParser.run(response);
             } catch (IllegalArgumentException e) {
                 outputView.displayErrorMessage(e.getMessage());
             }
@@ -183,7 +183,7 @@ public class StoreController {
         while (true) {
             try {
                 String response = inputView.askForAdditionalPurchase();
-                return responseParsingService.run(response);
+                return responseParser.run(response);
             } catch (IllegalArgumentException e) {
                 outputView.displayErrorMessage(e.getMessage());
             }

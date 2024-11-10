@@ -9,18 +9,20 @@ import static store.custom.view.DisplayConstants.SPACE;
 import static store.custom.view.DisplayConstants.ZERO_STOCK_MESSAGE;
 
 import java.util.List;
-import store.custom.model.OrderSheet;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderSheet;
+import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
 public class OutputView {
-    public void displayProducts(Products productCatalog) {
+    // 재고 현황 출력 메서드
+    public void displayInventoryStatus(Products productCatalog) {
         displayWelcomeMessage();
 
         for (Product product : productCatalog.getProducts()) {
             displayProductInfo(product);
         }
+        
         System.out.println();
     }
 
@@ -61,6 +63,7 @@ public class OutputView {
         return displayFormat;
     }
 
+    // 영수증 출력 메서드
     public void displayReceipt(OrderSheet orderSheet, List<Integer> num, int membershipDiscount) {
         displayPurchaseHistory(orderSheet);
         displayFreebie(orderSheet);
@@ -92,6 +95,7 @@ public class OutputView {
         System.out.println(Receipt.DIVIDING_LINE.getFormat());
     }
 
+    // 에러 메시지 출력 메서드
     public void displayErrorMessage(String errorMessage) {
         System.out.println(errorMessage);
     }

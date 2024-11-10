@@ -1,4 +1,4 @@
-package store.custom.model;
+package store.custom.model.order;
 
 public class OrderedProduct {
     private String name;

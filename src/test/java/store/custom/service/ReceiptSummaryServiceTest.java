@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import store.custom.model.OrderSheet;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderSheet;
+import store.custom.model.order.OrderedProduct;
 
-public class ReceiptDetailsCalculationServiceTest {
+public class ReceiptSummaryServiceTest {
     @Test
     public void 영수증내역계산서비스_주문제품중프로모션제품이있을때_테스트() {
         OrderSheet orderSheet = new OrderSheet(List.of(
@@ -15,7 +15,7 @@ public class ReceiptDetailsCalculationServiceTest {
                 new OrderedProduct("물", 2, 1000, null, 0, 0)
         ));
 
-        List<Integer> result = ReceiptDetailsCalculationService.run(orderSheet);
+        List<Integer> result = ReceiptSummaryService.run(orderSheet);
 
         assertEquals(12, result.get(0)); // totalQuantity
         assertEquals(11000, result.get(1)); // totalPrice
@@ -29,7 +29,7 @@ public class ReceiptDetailsCalculationServiceTest {
                 new OrderedProduct("물", 2, 1000, null, 0, 0)
         ));
 
-        List<Integer> result = ReceiptDetailsCalculationService.run(orderSheet);
+        List<Integer> result = ReceiptSummaryService.run(orderSheet);
 
         assertEquals(7, result.get(0)); // totalQuantity
         assertEquals(6000, result.get(1)); // totalPrice

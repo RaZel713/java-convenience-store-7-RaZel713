@@ -1,13 +1,13 @@
-package store.custom.service;
+package store.custom.service.editor;
 
 import java.util.ArrayList;
 import java.util.List;
-import store.custom.model.OrderSheet;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderSheet;
+import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
-public class ProductCatalogEditor {
+public class ProductsEditor {
     public static Products run(Products originalCatalog) {
         List<Product> resultCatalog = new ArrayList<>();
         int currentIndex;
@@ -59,7 +59,7 @@ public class ProductCatalogEditor {
             addProductConsideringPromotion(lastProduct, result);
         }
     }
-    
+
     public static void adjustInventoryForOrders(OrderSheet orderSheet, Products productCatalog) {
         for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
             processOrderedProduct(orderedProduct, productCatalog);

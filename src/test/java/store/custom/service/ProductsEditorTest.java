@@ -6,12 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.custom.model.OrderSheet;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderSheet;
+import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
+import store.custom.service.editor.ProductsEditor;
 
-public class ProductCatalogEditorTest {
+public class ProductsEditorTest {
 
     @DisplayName("제품목록관리_동일한이름과가격의제품이있을때_테스트")
     @Test
@@ -21,7 +22,7 @@ public class ProductCatalogEditorTest {
                 new Product("콜라", 1000, 10, null)
         ));
 
-        Products resultCatalog = ProductCatalogEditor.run(originalCatalog);
+        Products resultCatalog = ProductsEditor.run(originalCatalog);
 
         assertEquals(2, resultCatalog.getProductsSize());
         assertEquals("콜라", resultCatalog.getProductByIndex(0).getName());
@@ -38,7 +39,7 @@ public class ProductCatalogEditorTest {
                 new Product("물", 500, 10, null)
         ));
 
-        Products resultCatalog = ProductCatalogEditor.run(originalCatalog);
+        Products resultCatalog = ProductsEditor.run(originalCatalog);
 
         assertEquals(3, resultCatalog.getProductsSize());
         assertEquals("오렌지주스", resultCatalog.getProductByIndex(0).getName());
@@ -56,7 +57,7 @@ public class ProductCatalogEditorTest {
                 new Product("오렌지주스", 1800, 9, "MD추천상품")
         ));
 
-        Products resultCatalog = ProductCatalogEditor.run(originalCatalog);
+        Products resultCatalog = ProductsEditor.run(originalCatalog);
 
         assertEquals(3, resultCatalog.getProductsSize());
         assertEquals("오렌지주스", resultCatalog.getProductByIndex(1).getName());
@@ -73,7 +74,7 @@ public class ProductCatalogEditorTest {
                 new Product("에너지바", 2000, 5, null)
         ));
 
-        Products resultCatalog = ProductCatalogEditor.run(originalCatalog);
+        Products resultCatalog = ProductsEditor.run(originalCatalog);
 
         assertEquals(2, resultCatalog.getProductsSize());
         assertEquals("물", resultCatalog.getProductByIndex(0).getName());
@@ -96,7 +97,7 @@ public class ProductCatalogEditorTest {
                 new OrderedProduct("물", 5, 500, null, 0, 0)
         ));
 
-        ProductCatalogEditor.adjustInventoryForOrders(orderSheet, originalCatalog);
+        ProductsEditor.adjustInventoryForOrders(orderSheet, originalCatalog);
 
         assertEquals(0, originalCatalog.getProductByIndex(0).getQuantity());
         assertEquals(8, originalCatalog.getProductByIndex(1).getQuantity());

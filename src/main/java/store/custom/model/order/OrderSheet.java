@@ -1,4 +1,4 @@
-package store.custom.model;
+package store.custom.model.order;
 
 import java.util.ArrayList;
 import java.util.List;

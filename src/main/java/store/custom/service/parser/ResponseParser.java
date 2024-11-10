@@ -1,8 +1,8 @@
-package store.custom.service;
+package store.custom.service.parser;
 
 import store.custom.validator.Validator;
 
-public class ResponseParsingService {
+public class ResponseParser {
 
     public String run(String response) {
         Validator.validateEmptyInput(response);

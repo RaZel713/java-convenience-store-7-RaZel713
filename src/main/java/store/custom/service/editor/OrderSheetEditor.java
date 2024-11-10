@@ -1,9 +1,9 @@
-package store.custom.service;
+package store.custom.service.editor;
 
 import java.util.List;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderedProduct;
 
-public class OrderSheetEditService {
+public class OrderSheetEditor {
     public void applyResponseForNoPromotion(String response, List<Integer> promotionResult,
                                             OrderedProduct orderedProduct) {
         if (response.equals("Y")) {

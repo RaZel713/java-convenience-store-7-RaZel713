@@ -4,8 +4,8 @@ import static store.custom.constants.RegexConstants.PRODUCT_ORDER_REGEX;
 import static store.custom.validator.CustomErrorMessages.INVALID_INPUT;
 
 import java.util.List;
-import store.custom.model.OrderSheet;
-import store.custom.model.OrderedProduct;
+import store.custom.model.order.OrderSheet;
+import store.custom.model.order.OrderedProduct;
 import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
