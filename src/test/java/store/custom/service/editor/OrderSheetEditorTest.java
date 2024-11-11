@@ -42,11 +42,11 @@ public class OrderSheetEditorTest {
         orderSheetEditor.addPromotionInfo(products, promotions, orderSheet);
 
         OrderedProduct orderedProduct1 = orderSheet.getOrderSheet().getFirst();
-        assertEquals(1000, orderedProduct1.getTotalPrice());
+        assertEquals(4000, orderedProduct1.getTotalPrice());
         assertEquals("탄산2+1", orderedProduct1.getPromotion());
 
         OrderedProduct orderedProduct2 = orderSheet.getOrderSheet().get(1);
-        assertEquals(500, orderedProduct2.getTotalPrice());
+        assertEquals(1000, orderedProduct2.getTotalPrice());
         assertNull(orderedProduct2.getPromotion());
     }
 
@@ -101,13 +101,12 @@ public class OrderSheetEditorTest {
     void 주문서에디터_할인되지않는제품구매_테스트() {
         PromotionResult promotionResult = new PromotionResult(3, 0, 1);
         OrderedProduct orderedProduct = new OrderedProduct(
-                "콜라", 10, 1000, "탄산2+1", 2, 1);
+                "콜라", 10, 10000, "탄산2+1", 2, 1);
 
         orderSheetEditor.applyResponseForNoPromotion(RESPONSE_YES, promotionResult, orderedProduct);
 
         assertEquals(7, orderedProduct.getBuy());
         assertEquals(3, orderedProduct.getGet());
-        assertEquals(10000, orderedProduct.getTotalPrice());
         assertEquals(10, orderedProduct.getQuantity());
     }
 
@@ -116,14 +115,13 @@ public class OrderSheetEditorTest {
     void 주문서에디터_할인되지않는제품미구매_테스트() {
         PromotionResult promotionResult = new PromotionResult(3, 0, 1);
         OrderedProduct orderedProduct = new OrderedProduct(
-                "콜라", 10, 1000, "탄산2+1", 2, 1);
+                "콜라", 10, 10000, "탄산2+1", 2, 1);
 
         orderSheetEditor.applyResponseForNoPromotion(RESPONSE_NO, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(3, orderedProduct.getGet());
         assertEquals(9, orderedProduct.getQuantity());
-        assertEquals(9000, orderedProduct.getTotalPrice());
     }
 
     @DisplayName("주문서에디터_증정품추가적용_테스트")
@@ -131,14 +129,13 @@ public class OrderSheetEditorTest {
     void 주문서편집에디터_증정품추가적용_테스트() {
         PromotionResult promotionResult = new PromotionResult(2, 1, 0);
         OrderedProduct orderedProduct = new OrderedProduct(
-                "콜라", 8, 1000, "탄산2+1", 2, 1);
+                "콜라", 8, 8000, "탄산2+1", 2, 1);
 
         orderSheetEditor.applyResponseForFreeProduct(RESPONSE_YES, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(9, orderedProduct.getQuantity());
         assertEquals(3, orderedProduct.getGet());
-        assertEquals(9000, orderedProduct.getTotalPrice());
     }
 
     @DisplayName("주문서에디터_증정품추가미적용_테스트")
@@ -146,28 +143,26 @@ public class OrderSheetEditorTest {
     void 주문서에디터_증정품추가미적용_테스트() {
         PromotionResult promotionResult = new PromotionResult(2, 1, 0);
         OrderedProduct orderedProduct = new OrderedProduct(
-                "콜라", 8, 1000, "탄산2+1", 2, 1);
+                "콜라", 8, 8000, "탄산2+1", 2, 1);
 
         orderSheetEditor.applyResponseForFreeProduct(RESPONSE_NO, promotionResult, orderedProduct);
 
         assertEquals(6, orderedProduct.getBuy());
         assertEquals(8, orderedProduct.getQuantity());
         assertEquals(2, orderedProduct.getGet());
-        assertEquals(8000, orderedProduct.getTotalPrice());
     }
 
-    @DisplayName("주문서에디터_프로모션이없는경우_테스트")
+    @DisplayName("주문서에디터_주문수량전부프로모션적용가능_테스트")
     @Test
-    void 주문서에디터_프로모션이없는경우_테스트() {
-
+    void 주문서에디터_주문수량전부프로모션적용가능_테스트() {
+        PromotionResult promotionResult = new PromotionResult(3, 0, 0);
         OrderedProduct orderedProduct = new OrderedProduct(
-                "콜라", 8, 1000, null, 0, 0);
+                "콜라", 9, 9000, "탄산2+1", 2, 1);
 
-        orderSheetEditor.computeTotalWithoutPromotion(orderedProduct);
+        orderSheetEditor.computeTotalWithPromotion(orderedProduct, promotionResult);
 
-        assertEquals(0, orderedProduct.getBuy());
-        assertEquals(0, orderedProduct.getGet());
-        assertEquals(8, orderedProduct.getQuantity());
-        assertEquals(8000, orderedProduct.getTotalPrice());
+        assertEquals(6, orderedProduct.getBuy());
+        assertEquals(9, orderedProduct.getQuantity());
+        assertEquals(3, orderedProduct.getGet());
     }
 }

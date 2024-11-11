@@ -51,7 +51,7 @@ public class StoreController {
 
         String repeat = RESPONSE_YES;
         while (RESPONSE_YES.equals(repeat)) {
-            outputView.displayInventoryStatus(productCatalog); // 재고 내역 출력
+            outputView.displayInventoryStatus(productCatalog);
             repeat = handleStoreOrder(productCatalog, promotionCatalog);
         }
     }
@@ -96,16 +96,9 @@ public class StoreController {
             PromotionResult promotionResult = promotionResults.getPromotionResultByIndex(index);
             OrderedProduct orderedProduct = orderSheet.getOrderSheetByIndex(index);
 
-            handleNonPromotionProduct(orderedProduct, promotionResult);
             handleExcludedPromotionProduct(orderedProduct, promotionResult);
             handleAdditionalFreebie(orderedProduct, promotionResult);
             handlePromotionProduct(orderedProduct, promotionResult);
-        }
-    }
-
-    private void handleNonPromotionProduct(OrderedProduct orderedProduct, PromotionResult promotionResult) {
-        if (promotionResult.getNonPromotionProductCount() == -1) {
-            orderSheetEditor.computeTotalWithoutPromotion(orderedProduct);
         }
     }
 
