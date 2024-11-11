@@ -113,7 +113,9 @@ public class OrderSheetEditor {
 
         orderedProduct.setBuy(orderedProduct.getBuy() * promotionAppliedCount);
         orderedProduct.setGet(orderedProduct.getGet() * promotionAppliedCount);
-        orderedProduct.setQuantity(orderedProduct.getQuantity() - nonPromotionProductCount);
+        int productPrice = orderedProduct.getTotalPrice() / orderedProduct.getQuantity();
+        orderedProduct.setQuantity(orderedProduct.getQuantity() - nonPromotionProductCount); // 수량 감소
+        orderedProduct.setTotalPrice(productPrice * orderedProduct.getQuantity()); // 수량 감소에 따른 총 가격 변경
     }
 
     public void applyResponseForFreeProduct(String response, PromotionResult promotionResult,
@@ -131,7 +133,10 @@ public class OrderSheetEditor {
         int extraPromotionCount = promotionResult.getExtraPromotionCount();
 
         orderedProduct.setBuy(orderedProduct.getBuy() * (promotionAppliedCount + extraPromotionCount));
-        orderedProduct.setQuantity(orderedProduct.getQuantity() + orderedProduct.getGet() * extraPromotionCount);
+        int productPrice = orderedProduct.getTotalPrice() / orderedProduct.getQuantity();
+        orderedProduct.setQuantity(
+                orderedProduct.getQuantity() + orderedProduct.getGet() * extraPromotionCount); // 수량 증가
+        orderedProduct.setTotalPrice(productPrice * orderedProduct.getQuantity()); // 수량 증가에 따른 총 가격 변경
         orderedProduct.setGet(orderedProduct.getGet() * (promotionAppliedCount + extraPromotionCount));
     }
 

@@ -92,8 +92,8 @@ public class ProductsEditorTest {
         ));
 
         OrderSheet orderSheet = new OrderSheet(List.of(
-                new OrderedProduct("콜라", 12, 1000, "탄산2+1", 2, 1),
-                new OrderedProduct("물", 5, 500, null, 0, 0)
+                new OrderedProduct("콜라", 12, 12000, "탄산2+1", 8, 4),
+                new OrderedProduct("물", 5, 2500, null, 0, 0)
         ));
 
         ProductsEditor.adjustInventoryForOrders(orderSheet, originalCatalog);
