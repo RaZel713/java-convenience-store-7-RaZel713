@@ -4,7 +4,7 @@
 
 ## 프로그래밍 요구 사항
 
-- [ ] JDK 21 버전에서 실행 가능해야 한다
+- [x] JDK 21 버전에서 실행 가능해야 한다
 - [x] 프로그램 종료 시 System.exit()를 호출하지 않는다.
 - [x] indent(인덴트, 들여쓰기) depth는 2까지만 허용한다. 예를 들어 while문 안에 if문이 있으면 들여쓰기는 2이다.
 - [x] 3항 연산자를 쓰지 않는다.
@@ -18,7 +18,54 @@
 ## 패키지 목록
 
 ```
-추후 추가
+store
+│   Application.java
+└───custom
+    ├───constants
+    │       ├─── NumberConstants.java       // 숫자 상수 처리
+    │       ├─── RegexConstants.java        // 정규표현식 상수 처리
+    │       └─── StringConstants.java       // 문자열 상수 처리
+    ├───controller
+    │       └─── StoreController.java       // 컨트롤러
+    ├───model
+    │   ├───order
+    │   │       ├─── OrderedProduct.java    // 주문한 상품 정보
+    │   │       └─── OrderSheet.java        // 주문서 (일급 컬렉션)
+    │   ├───product
+    │   │       ├─── Product.java           // 상품 정보
+    │   │       └─── Products.java          // 재고 내역 (일급 컬렉션)
+    │   ├───promotion
+    │   │       ├─── Promotion.java         // 프로모션 정보
+    │   │       └─── Promotions.java        // 프로모션 목록 (일급 컬렉션)
+    │   ├───PromotionResult
+    │   │        ├─── PromotionResult.java  // 주문에 따른 프로모션 적용 결과
+    │   │        └─── PromotionResults.java // 주문에 따른 프로모션 적용 결과 목록 (일급 컬렉션)
+    │   ├─── PromotionInfo.java             // 주문 수량에 따른 프로모션 횟수 (몫, 나머지)
+    │   └─── ReceiptDetails.java            // 영수증 세부 내역
+    ├───service
+    │   ├───editor
+    │   │   ├─── OrderSheetEditor.java      // 주문서 편집기
+    │   │   └─── ProductsEditor.java        // 재고 내역 편집기
+    │   ├───filehandler
+    │   │   └─── FileReader.java            // md파일 리더기
+    │   ├───maker
+    │   │   ├─── PromotionResultMaker.java  // 프로모션 적용 결과 생성기
+    │   │   └─── ReceiptDetailsMaker.java   // 영수증 세부 내역 생성기
+    │   └───parser
+    │       ├─── OrderParser.java           // 주문 분석기
+    │       ├─── ProductParser.java         // 상품 정보 분석기
+    │       ├─── PromotionParser.java       // 프로모션 정보 분석기
+    │       └─── ResponseParser.java        // 응답 분석기
+    ├───Utils
+    │   └─── StringUtils.java               // 문자열 변환
+    ├───validator
+    │   ├─── CustomErrorMessages.java       // 에러 메시지
+    │   └─── Validator.java                 // 유효성 검사기
+    └───view
+        ├─── DisplayConstants.java          // 입출력 관련 메시지 상수 처리
+        ├─── InputView.java                 // 입력
+        ├─── OutputView.java                // 출력
+        └─── Receipt.java                   // 영수증 형식 (Enum)
 ```
 
 ## 기능 목록
@@ -128,7 +175,7 @@
 - **입력예시**:
 
 ```입력예시
-현재 {상품명}은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)
+현재 {상품명}은(는) {수량}개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)
 Y
 현재 {상품명} {수량}개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)
 Y
@@ -139,7 +186,7 @@ Y
 
 > - 입력받은 문자열이 null 이거나 빈문자열 이거나 공백으로만 이루어져있는 경우
 >
-> - 입력받은 문자열이 'Y' 나 'N' 이 아닌 경우
+> - 입력받은 문자열이 "Y" 나 "N" 이 아닌 경우
 
 </details>
 
@@ -173,7 +220,7 @@ Y
 
 > - 입력받은 문자열이 null 이거나 빈문자열 이거나 공백으로만 이루어져있는 경우
 >
-> - 입력받은 문자열이 'Y' 나 'N' 이 아닌 경우
+> - 입력받은 문자열이 "Y" 나 "N" 이 아닌 경우
 
 </details>
 
@@ -201,13 +248,13 @@ Y
 - **출력예시**:
 
 ```출력예시
-===========W 편의점=============
+==============W 편의점================
 상품명		수량	금액
 콜라		3 	3,000
 에너지바 		5 	10,000
-===========증	정=============
+=============증	정===============
 콜라		1
-==============================
+====================================
 총구매액		8	13,000
 행사할인			-1,000
 멤버십할인			-3,000
@@ -240,9 +287,7 @@ Y
 
 > - 입력받은 문자열이 null 이거나 빈문자열 이거나 공백으로만 이루어져있는 경우
 >
-> - 입력받은 문자열에 'Y'나 'N'을 제외한 문자가 존재하는 경우
->
-> - 입력받은 문자열에 2개 이상의 'Y' 나 'N' 이 포함되어 있는 경우
+> - 입력받은 문자열이 "Y" 나 "N" 이 아닌 경우
 
 </details>
 
