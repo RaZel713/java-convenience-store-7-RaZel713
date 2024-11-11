@@ -1,7 +1,7 @@
 package store.custom.model.order;
 
 public class OrderedProduct {
-    private String name;
+    private final String name;
     private int quantity;
     private int totalPrice;
     private String promotion;

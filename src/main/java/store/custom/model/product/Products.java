@@ -1,5 +1,7 @@
 package store.custom.model.product;
 
+import static store.custom.validator.CustomErrorMessages.INVALID_INDEX;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class Products {
 
     public Product getProductByIndex(int index) {
         if (index < 0 || index >= productCatalog.size()) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
+            throw new IndexOutOfBoundsException(INVALID_INDEX + index);
         }
         return productCatalog.get(index);
     }

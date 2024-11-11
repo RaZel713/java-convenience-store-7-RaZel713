@@ -1,9 +1,9 @@
 package store.custom.model.promotion;
 
 public class Promotion {
-    private String name;
-    private int buy;
-    private int get;
+    private final String name;
+    private final int buy;
+    private final int get;
     private String startDate;
     private String endDate;
 

@@ -1,6 +1,6 @@
 package store.custom.service.filehandler;
 
-import static store.custom.validator.CustomErrorMessages.READING_FAIL;
+import static store.custom.validator.CustomErrorMessages.FILE_READING_FAIL;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +15,7 @@ public class FileReader {
         try {
             return Files.readAllLines(Path.of(filePath));
         } catch (IOException e) {
-            throw new RuntimeException(READING_FAIL + e);
+            throw new RuntimeException(FILE_READING_FAIL + e);
         }
     }
 }

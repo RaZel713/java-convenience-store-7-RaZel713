@@ -35,7 +35,7 @@ public class PromotionResultMakerTest {
 
         PromotionResults results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
 
-        assertEquals(2, results.getPromotionResultByIndex(0).getPromotionAppliedCount());
+        assertEquals(2, results.getPromotionResultByIndex(0).getApplicablePromotionCount());
         assertEquals(0, results.getPromotionResultByIndex(0).getExtraPromotionCount());
         assertEquals(0, results.getPromotionResultByIndex(0).getNonPromotionProductCount());
     }
@@ -48,7 +48,7 @@ public class PromotionResultMakerTest {
 
         PromotionResults results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
 
-        assertEquals(1, results.getPromotionResultByIndex(0).getPromotionAppliedCount());
+        assertEquals(1, results.getPromotionResultByIndex(0).getApplicablePromotionCount());
         assertEquals(0, results.getPromotionResultByIndex(0).getExtraPromotionCount());
         assertEquals(1, results.getPromotionResultByIndex(0).getNonPromotionProductCount());
     }
@@ -61,7 +61,7 @@ public class PromotionResultMakerTest {
 
         PromotionResults results = promotionResultMaker.createPromotionResults(products, testOrderSheet);
 
-        assertEquals(-1, results.getPromotionResultByIndex(0).getPromotionAppliedCount());
+        assertEquals(-1, results.getPromotionResultByIndex(0).getApplicablePromotionCount());
         assertEquals(-1, results.getPromotionResultByIndex(0).getExtraPromotionCount());
         assertEquals(-1, results.getPromotionResultByIndex(0).getNonPromotionProductCount());
     }

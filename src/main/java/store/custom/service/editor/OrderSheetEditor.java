@@ -16,9 +16,10 @@ import store.custom.model.promotion.Promotion;
 import store.custom.model.promotion.Promotions;
 
 public class OrderSheetEditor {
+    // 주문서 초기 설정: 가격과 프로모션 정보 추가
     public void addPromotionInfo(Products productCatalog, Promotions promotions, OrderSheet orderSheet) {
         for (OrderedProduct orderProduct : orderSheet.getOrderSheet()) {
-            setProductPriceAndPromotion(orderProduct, productCatalog); // 가격과 프로모션 추가
+            setProductPriceAndPromotion(orderProduct, productCatalog); // 총 가격과 프로모션 추가
             setPromotionDetails(orderProduct, promotions); // 프로모션 관련 정보 추가
         }
     }
@@ -36,7 +37,7 @@ public class OrderSheetEditor {
             if (product.getName().equals(orderProduct.getName())) {
                 return product;
             }
-        } // 이름이 같은 제품은 프로모션 있는 순 -> 프로모션 없는 순
+        }
         return null;
     }
 
@@ -86,8 +87,7 @@ public class OrderSheetEditor {
         }
     }
 
-    // 프로모션 결과
-
+    // 주문서 수정: 주문 수량에 다른 프로모션 적용 결과 반영
     public void applyResponseForNoPromotion(String response, PromotionResult promotionResult,
                                             OrderedProduct orderedProduct) {
         if (response.equals(RESPONSE_YES)) {
@@ -100,7 +100,7 @@ public class OrderSheetEditor {
     }
 
     private void processPurchaseWithNoDiscount(OrderedProduct orderedProduct, PromotionResult promotionResult) {
-        int promotionAppliedCount = promotionResult.getPromotionAppliedCount();
+        int promotionAppliedCount = promotionResult.getApplicablePromotionCount();
         int nonPromotionProductCount = promotionResult.getNonPromotionProductCount();
 
         orderedProduct.setBuy(orderedProduct.getBuy() * promotionAppliedCount + nonPromotionProductCount);
@@ -108,7 +108,7 @@ public class OrderSheetEditor {
     }
 
     private void processNonPurchaseWithNoDiscount(OrderedProduct orderedProduct, PromotionResult promotionResult) {
-        int promotionAppliedCount = promotionResult.getPromotionAppliedCount();
+        int promotionAppliedCount = promotionResult.getApplicablePromotionCount();
         int nonPromotionProductCount = promotionResult.getNonPromotionProductCount();
 
         orderedProduct.setBuy(orderedProduct.getBuy() * promotionAppliedCount);
@@ -116,8 +116,8 @@ public class OrderSheetEditor {
         orderedProduct.setQuantity(orderedProduct.getQuantity() - nonPromotionProductCount);
     }
 
-    public void applyResponseForFreeProduct
-            (String response, PromotionResult promotionResult, OrderedProduct orderedProduct) {
+    public void applyResponseForFreeProduct(String response, PromotionResult promotionResult,
+                                            OrderedProduct orderedProduct) {
         if (response.equals(RESPONSE_YES)) {
             processAdditionalPromotionApplied(orderedProduct, promotionResult);
         }
@@ -127,7 +127,7 @@ public class OrderSheetEditor {
     }
 
     private void processAdditionalPromotionApplied(OrderedProduct orderedProduct, PromotionResult promotionResult) {
-        int promotionAppliedCount = promotionResult.getPromotionAppliedCount();
+        int promotionAppliedCount = promotionResult.getApplicablePromotionCount();
         int extraPromotionCount = promotionResult.getExtraPromotionCount();
 
         orderedProduct.setBuy(orderedProduct.getBuy() * (promotionAppliedCount + extraPromotionCount));
@@ -136,7 +136,7 @@ public class OrderSheetEditor {
     }
 
     private void processAdditionalPromotionNotApplied(OrderedProduct orderedProduct, PromotionResult promotionResult) {
-        int promotionAppliedCount = promotionResult.getPromotionAppliedCount();
+        int promotionAppliedCount = promotionResult.getApplicablePromotionCount();
         int extraPromotionCount = promotionResult.getExtraPromotionCount();
 
         orderedProduct.setBuy(orderedProduct.getBuy() * (promotionAppliedCount + extraPromotionCount));
@@ -144,7 +144,7 @@ public class OrderSheetEditor {
     }
 
     public void computeTotalWithPromotion(OrderedProduct orderedProduct, PromotionResult promotionResult) {
-        int promotionAppliedCount = promotionResult.getPromotionAppliedCount();
+        int promotionAppliedCount = promotionResult.getApplicablePromotionCount();
 
         orderedProduct.setBuy(orderedProduct.getBuy() * promotionAppliedCount);
         orderedProduct.setGet(orderedProduct.getGet() * promotionAppliedCount);

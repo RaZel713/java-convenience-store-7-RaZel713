@@ -15,12 +15,14 @@ import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
 public class Validator {
+    // 파일 리더기 관련 유효성 검사
     public static void validateFilePath(String filePath) {
         if (!Files.exists(Path.of(filePath))) {
             throw new IllegalArgumentException(INVALID_FILE_PATH + filePath);
         }
     }
 
+    // 입력 관련 유효성 검사 (공통)
     public static void validateEmptyInput(String input) {
         checkNullInput(input);
         checkEmptyInput(input);
@@ -45,6 +47,7 @@ public class Validator {
         }
     }
 
+    // 주문 입력 관련 유효성 검사
     public static void validateOrderForm(List<String> orderForms) {
         for (String orderForm : orderForms) {
             if (!orderForm.matches(PRODUCT_ORDER_REGEX)) {
@@ -93,6 +96,7 @@ public class Validator {
         return totalQuantity;
     }
 
+    // 응답 입력 관련 유효성 검사
     public static void validateYesOrNoInput(String response) {
         if (!response.equals(RESPONSE_YES) && !response.equals(RESPONSE_NO)) {
             throw new IllegalArgumentException(INVALID_INPUT);

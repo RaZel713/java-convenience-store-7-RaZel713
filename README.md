@@ -19,7 +19,7 @@
 
 ```
 store
-│   Application.java
+├───Application.java                        // 실행 파일
 └───custom
     ├───constants
     │       ├─── NumberConstants.java       // 숫자 상수 처리

@@ -83,7 +83,7 @@ public class OutputView {
     }
 
     private void displayFreebie(OrderSheet orderSheet) {
-        System.out.println(Receipt.FREE_ITEM.getFormat());
+        System.out.println(Receipt.FREEBIE_HEADER.getFormat());
         for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
             if (orderedProduct.getGet() != 0) {
                 System.out.println(Receipt.FREE_ITEM_NAME.format(orderedProduct.getName(), orderedProduct.getGet()));

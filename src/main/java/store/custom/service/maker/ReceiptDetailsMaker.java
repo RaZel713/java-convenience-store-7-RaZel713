@@ -1,7 +1,7 @@
 package store.custom.service.maker;
 
-import static store.custom.constants.NumberConstants.DISCOUNT_RATE;
 import static store.custom.constants.NumberConstants.MEMBERSHIP_DISCOUNT_LIMIT;
+import static store.custom.constants.NumberConstants.MEMBERSHIP_DISCOUNT_RATE;
 import static store.custom.constants.StringConstants.RESPONSE_NO;
 
 import store.custom.model.ReceiptDetails;
@@ -63,7 +63,7 @@ public class ReceiptDetailsMaker {
         if (response.equals(RESPONSE_NO)) {
             return 0;
         }
-        int discountPrice = nonPromotionProductPrice * DISCOUNT_RATE / 100;
+        int discountPrice = nonPromotionProductPrice * MEMBERSHIP_DISCOUNT_RATE / 100;
         return Math.min(discountPrice, MEMBERSHIP_DISCOUNT_LIMIT);
     }
 }

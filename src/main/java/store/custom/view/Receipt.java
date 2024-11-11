@@ -4,7 +4,7 @@ public enum Receipt {
     TITLE("==============W 편의점================"),
     ITEM_HEADER("상품명\t\t\t수량\t\t\t금액"),
     ITEM_NAME("%s\t\t\t%d\t\t\t%,d"),
-    FREE_ITEM("=============증	정==============="),
+    FREEBIE_HEADER("=============증	정==============="),
     FREE_ITEM_NAME("%s\t\t\t%d"),
     DIVIDING_LINE("===================================="),
     TOTAL("총구매액\t\t\t%d\t\t\t%,d"),

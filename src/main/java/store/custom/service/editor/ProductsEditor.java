@@ -8,7 +8,8 @@ import store.custom.model.product.Product;
 import store.custom.model.product.Products;
 
 public class ProductsEditor {
-    public static Products run(Products originalCatalog) {
+    // 재고 목록 초기 설정: 목록에 프로모션 상품만 있는 경우 일반 상품 추가
+    public static Products inspectProductCatalog(Products originalCatalog) {
         List<Product> resultCatalog = new ArrayList<>();
         int currentIndex;
         for (currentIndex = 0; currentIndex < originalCatalog.getProductsSize() - 1; currentIndex++) {
@@ -43,7 +44,7 @@ public class ProductsEditor {
     private static int addProductConsideringPromotion(Product currentProduct, List<Product> result) {
         result.add(currentProduct);
 
-        if (currentProduct.getPromotion() != null) { // 해당 상품에 프로모션 값이 존재하면
+        if (currentProduct.getPromotion() != null) {
             result.add(createZeroStockProduct(currentProduct)); // 재고가 0인 제품 추가
         }
         return 0;
@@ -60,6 +61,7 @@ public class ProductsEditor {
         }
     }
 
+    // 주문 수량에 따른 재고 조정
     public static void adjustInventoryForOrders(OrderSheet orderSheet, Products productCatalog) {
         for (OrderedProduct orderedProduct : orderSheet.getOrderSheet()) {
             processOrderedProduct(orderedProduct, productCatalog);
@@ -72,25 +74,18 @@ public class ProductsEditor {
             if (remainQuantity == 0) {
                 break;
             }
-            if (isSameProduct(orderedProduct, product)) {
-                remainQuantity = updateProductQuantity(product, remainQuantity);
+            remainQuantity = updateProductQuantity(orderedProduct, product, remainQuantity);
+        }
+    }
+
+    private static int updateProductQuantity(OrderedProduct orderedProduct, Product product, int remainQuantity) {
+        if (product.getName().equals(orderedProduct.getName())) {
+            if (product.getPromotion() != null) {
+                return calculateRemainingQuantityWithPromotion(product, remainQuantity);
             }
+            return calculateRemainingQuantityWithoutPromotion(product, remainQuantity);
         }
-    }
-
-    private static boolean isSameProduct(OrderedProduct orderedProduct, Product product) {
-        return product.getName().equals(orderedProduct.getName());
-    }
-
-    private static int updateProductQuantity(Product product, int remainQuantity) {
-        if (hasPromotion(product)) { // 프로모션있을때
-            return calculateRemainingQuantityWithPromotion(product, remainQuantity);
-        }
-        return calculateRemainingQuantityWithoutPromotion(product, remainQuantity);
-    }
-
-    private static boolean hasPromotion(Product product) {
-        return product.getPromotion() != null;
+        return remainQuantity;
     }
 
     private static int calculateRemainingQuantityWithPromotion(Product product, int remainQuantity) {

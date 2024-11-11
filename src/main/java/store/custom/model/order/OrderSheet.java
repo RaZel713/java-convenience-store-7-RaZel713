@@ -1,5 +1,7 @@
 package store.custom.model.order;
 
+import static store.custom.validator.CustomErrorMessages.INVALID_INDEX;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class OrderSheet {
 
     public OrderedProduct getOrderSheetByIndex(int index) {
         if (index < 0 || index >= orderSheet.size()) {
-            throw new IndexOutOfBoundsException("Invalid index: " + index);
+            throw new IndexOutOfBoundsException(INVALID_INDEX + index);
         }
         return orderSheet.get(index);
     }

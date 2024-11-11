@@ -60,7 +60,7 @@ public class StoreController {
     private Products setUpProductCatalog() {
         List<String> productsLines = FileReader.run(PRODUCTS_FILE_PATH);
         Products productCatalog = ProductParser.run(productsLines);
-        return ProductsEditor.run(productCatalog);
+        return ProductsEditor.inspectProductCatalog(productCatalog);
     }
 
     private Promotions setUpPromotionCatalog() {

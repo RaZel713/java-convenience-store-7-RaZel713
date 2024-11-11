@@ -21,7 +21,7 @@ public class ProductsEditorTest {
                 new Product("콜라", 1000, 10, null)
         ));
 
-        Products resultCatalog = ProductsEditor.run(originalCatalog);
+        Products resultCatalog = ProductsEditor.inspectProductCatalog(originalCatalog);
 
         assertEquals(2, resultCatalog.getProductsSize());
         assertEquals("콜라", resultCatalog.getProductByIndex(0).getName());
@@ -38,7 +38,7 @@ public class ProductsEditorTest {
                 new Product("물", 500, 10, null)
         ));
 
-        Products resultCatalog = ProductsEditor.run(originalCatalog);
+        Products resultCatalog = ProductsEditor.inspectProductCatalog(originalCatalog);
 
         assertEquals(3, resultCatalog.getProductsSize());
         assertEquals("오렌지주스", resultCatalog.getProductByIndex(0).getName());
@@ -56,7 +56,7 @@ public class ProductsEditorTest {
                 new Product("오렌지주스", 1800, 9, "MD추천상품")
         ));
 
-        Products resultCatalog = ProductsEditor.run(originalCatalog);
+        Products resultCatalog = ProductsEditor.inspectProductCatalog(originalCatalog);
 
         assertEquals(3, resultCatalog.getProductsSize());
         assertEquals("오렌지주스", resultCatalog.getProductByIndex(1).getName());
@@ -73,7 +73,7 @@ public class ProductsEditorTest {
                 new Product("에너지바", 2000, 5, null)
         ));
 
-        Products resultCatalog = ProductsEditor.run(originalCatalog);
+        Products resultCatalog = ProductsEditor.inspectProductCatalog(originalCatalog);
 
         assertEquals(2, resultCatalog.getProductsSize());
         assertEquals("물", resultCatalog.getProductByIndex(0).getName());
