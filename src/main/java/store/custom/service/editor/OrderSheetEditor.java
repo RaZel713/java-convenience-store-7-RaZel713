@@ -93,7 +93,6 @@ public class OrderSheetEditor {
         if (response.equals(RESPONSE_YES)) {
             processPurchaseWithNoDiscount(orderedProduct, promotionResult);
         }
-
         if (response.equals(RESPONSE_NO)) {
             processNonPurchaseWithNoDiscount(orderedProduct, promotionResult);
         }
@@ -130,21 +129,18 @@ public class OrderSheetEditor {
 
     private void processAdditionalPromotionApplied(OrderedProduct orderedProduct, PromotionResult promotionResult) {
         int promotionAppliedCount = promotionResult.getApplicablePromotionCount();
-        int extraPromotionCount = promotionResult.getExtraPromotionCount();
 
-        orderedProduct.setBuy(orderedProduct.getBuy() * (promotionAppliedCount + extraPromotionCount));
+        orderedProduct.setBuy(orderedProduct.getBuy() * (promotionAppliedCount + 1));
         int productPrice = orderedProduct.getTotalPrice() / orderedProduct.getQuantity();
-        orderedProduct.setQuantity(
-                orderedProduct.getQuantity() + orderedProduct.getGet() * extraPromotionCount); // 수량 증가
+        orderedProduct.setQuantity(orderedProduct.getQuantity() + orderedProduct.getGet()); // 수량 증가
         orderedProduct.setTotalPrice(productPrice * orderedProduct.getQuantity()); // 수량 증가에 따른 총 가격 변경
-        orderedProduct.setGet(orderedProduct.getGet() * (promotionAppliedCount + extraPromotionCount));
+        orderedProduct.setGet(orderedProduct.getGet() * (promotionAppliedCount + 1));
     }
 
     private void processAdditionalPromotionNotApplied(OrderedProduct orderedProduct, PromotionResult promotionResult) {
         int promotionAppliedCount = promotionResult.getApplicablePromotionCount();
-        int extraPromotionCount = promotionResult.getExtraPromotionCount();
 
-        orderedProduct.setBuy(orderedProduct.getBuy() * (promotionAppliedCount + extraPromotionCount));
+        orderedProduct.setBuy(orderedProduct.getBuy() * (promotionAppliedCount + 1));
         orderedProduct.setGet(orderedProduct.getGet() * promotionAppliedCount);
     }
 
