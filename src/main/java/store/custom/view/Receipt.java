@@ -9,8 +9,8 @@ public enum Receipt {
     DIVIDING_LINE("===================================="),
     TOTAL("총구매액\t\t\t%d\t\t\t%,d"),
     PROMOTION_DISCOUNT("행사할인\t\t\t\t\t\t-%,d"),
-    MEMBERSHIP_DISCOUNT("멤버십할인\t\t\t\t\t\t-%,d"),
-    FINAL_PRICE("내실돈\t\t\t\t\t\t\t%,d");
+    MEMBERSHIP_DISCOUNT("멤버십할인\t\t\t\t\t-%,d"),
+    FINAL_PRICE("내실돈\t\t\t\t\t\t%,d");
 
     private final String format;
 
